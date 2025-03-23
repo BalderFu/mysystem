@@ -1,57 +1,36 @@
 package com.sensitive.biz;
 
-import cn.hutool.json.JSONUtil;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.json.JsonWriteFeature;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.MethodParameter;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.context.annotation.Bean;
 
 @Slf4j
-@RestControllerAdvice(annotations = RestController.class)
 @SpringBootApplication
-public class Runner implements ResponseBodyAdvice<String> {
+@MapperScan("com.sensitive.biz.mapper")
+public class Runner {
 
     public static void main(String[] args) {
-        SpringApplication.run(Runner.class, args);
+       SpringApplication.run(Runner.class, args);
     }
 
-
-    @Override
-    public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return true;
-    }
-
-    @Override
-    public String beforeBodyWrite(String body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        Map<String, String> RESULT = new HashMap<String, String>() {{
-            put("code", "200");
-            put("message", "请求成功");
-        }};
-        if (returnType.getParameter().getType().isAssignableFrom(String.class)) {
-            RESULT.put("data", body);
-        }
-        return JSONUtil.toJsonStr(RESULT);
-    }
-
-
-    @ExceptionHandler(Throwable.class)
-    public Map<String, String> handleException(Throwable e) {
-        log.error("Error occurs.", e);
-        Map<String, String> RESULT = new HashMap<String, String>() {{
-            put("code", "201");
-        }};
-        RESULT.put("message", e.getMessage());
-        return RESULT;
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // 启用 Java 8 时间支持
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 以 ISO-8601 格式返回日期
+//        objectMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, false); // 禁用非 ASCII 转义
+        objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true) ;
+        objectMapper.configure(JsonWriteFeature.ESCAPE_NON_ASCII.mappedFeature(), false);
+        return objectMapper;
     }
 }
