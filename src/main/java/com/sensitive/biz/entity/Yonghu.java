@@ -15,6 +15,9 @@ public class Yonghu {
     private String role; // admin/normal
     private String username;
     private String password;
+    private String phone;
+    private String avatar;
+    private String email;
 
     @TableField("create_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

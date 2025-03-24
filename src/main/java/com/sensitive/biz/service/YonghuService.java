@@ -24,6 +24,9 @@ public class YonghuService extends ServiceImpl<YongHuMapper, Yonghu> {
         Yonghu yonghu = new Yonghu();
         yonghu.setUsername(yonghuRegistry.getUsername());
         yonghu.setPassword(yonghuRegistry.getPassword());
+        yonghu.setEmail(yonghuRegistry.getEmail());
+        yonghu.setPhone(yonghuRegistry.getPhone());
+        yonghu.setAvatar(yonghuRegistry.getAvatar());
         yongHuMapper.insert(yonghu);
         StpUtil.login(yonghu.getId());
     }

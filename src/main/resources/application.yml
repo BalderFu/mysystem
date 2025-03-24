@@ -12,9 +12,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   web:
     resources:
-      static-locations: file:${user.dir}/upload/
-
-
+      static-locations: file:${user.dir}/src/main/resources/upload
 sa-token:
   token-name: authorization
   token-prefix: Bearer
@@ -23,4 +21,4 @@ sa-token:
   is-concurrent: true
   is-share: true
   token-style: tik
-  is-log: true
+  is-log: false
