@@ -1,0 +1,33 @@
+{
+  "name": "sensitive",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "axios": "^1.8.3",
+    "element-ui": "^2.15.14",
+    "js-cookie": "^2.2.0",
+    "mammoth": "^1.9.0",
+    "path-to-regexp": "2.4.0",
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.1",
+    "vuex": "3.1.0"
+  },
+  "devDependencies": {
+    "@vue/babel-preset-jsx": "^1.4.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "path-browserify": "^1.0.1",
+    "sass": "1.26.8",
+    "sass-loader": "8.0.2",
+    "vue-template-compiler": "^2.6.14"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

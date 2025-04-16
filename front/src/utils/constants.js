@@ -1,0 +1,10 @@
+const ID = {
+    SENSITIVE_KEY: "SENSITIVE_KEY",
+    SENSITIVE_TEXT_KEY: "SENSITIVE_TEXT_KEY",
+    USER_KEY: "USER_KEY",
+    USER_TOKEN_KEY: "USER_TOKEN_KEY"
+}
+
+export default {
+    ID
+}

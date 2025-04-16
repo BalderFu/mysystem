@@ -1,0 +1,89 @@
+/* 全局过渡动画 */
+
+/* 淡入淡出 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 滑动效果 */
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+/* 缩放效果 */
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.3s ease;
+}
+
+.scale-enter,
+.scale-leave-to {
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+/* 列表动画 */
+.list-move {
+  transition: transform 0.5s;
+}
+
+.list-enter-active, 
+.list-leave-active {
+  transition: all 0.5s;
+}
+
+.list-enter, 
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* 页面切换动画 */
+.page-enter-active, 
+.page-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.page-enter {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+/* 卡片动画 */
+.card-enter-active, 
+.card-leave-active {
+  transition: all 0.3s ease;
+}
+
+.card-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.card-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* 折叠展开效果 */
+.collapse-transition {
+  transition: 0.3s height ease-in-out, 0.3s padding-top ease-in-out, 0.3s padding-bottom ease-in-out;
+} 

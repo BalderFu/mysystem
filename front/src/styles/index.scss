@@ -1,0 +1,243 @@
+/* 全局样式定义 */
+
+/* 基础变量定义 */
+:root {
+  /* 主题配色 - 深色科技风 */
+  --primary-color: #4F46E5;
+  --primary-light: #818CF8;
+  --primary-dark: #3730A3;
+  --primary-gradient: linear-gradient(135deg, #4F46E5 0%, #7A70FE 100%);
+  
+  --accent-color: #06B6D4;
+  --accent-light: #22D3EE;
+  --accent-dark: #0891B2;
+  --accent-gradient: linear-gradient(135deg, #06B6D4 0%, #0EA5E9 100%);
+  
+  --success-color: #10B981;
+  --success-light: #34D399;
+  --success-dark: #059669;
+  
+  --warning-color: #F59E0B;
+  --warning-light: #FBBF24;
+  --warning-dark: #D97706;
+  
+  --danger-color: #EF4444;
+  --danger-light: #F87171;
+  --danger-dark: #DC2626;
+  
+  --info-color: #6366F1;
+  --info-light: #818CF8;
+  --info-dark: #4F46E5;
+  
+  /* 文本颜色 */
+  --text-primary: #F3F4F6;
+  --text-secondary: #D1D5DB;
+  --text-tertiary: #9CA3AF;
+  --text-placeholder: #6B7280;
+  --text-dark: #1F2937;
+  
+  /* 边框颜色 */
+  --border-color: #374151;
+  --border-light: #4B5563;
+  --border-lighter: #6B7280;
+  --border-extra-light: #9CA3AF;
+
+  /* 背景颜色 */
+  --background-color: #111827;
+  --background-light: #1F2937;
+  --background-lighter: #374151;
+  --background-card: #1E293B;
+  
+  /* 菜单颜色 */
+  --menu-background: #0F172A;
+  --menu-dark: #020617;
+  --menu-text: #94A3B8;
+  --menu-active-text: #38BDF8;
+  --menu-hover: #1E293B;
+  --menu-active-bg: rgba(56, 189, 248, 0.1);
+  --header-dark: #0F172A;
+  --accent-glow: rgba(56, 189, 248, 0.5);
+  --dark-border: #1E293B;
+
+  /* 阴影 */
+  --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --dark-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
+  --glow-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+  
+  /* 过渡效果 */
+  --transition-time: 0.3s;
+}
+
+/* 全局重置 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--background-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 布局相关 */
+.page-container {
+  padding: 20px;
+}
+
+.card-container {
+  background-color: var(--background-card);
+  border-radius: 8px;
+  box-shadow: var(--dark-box-shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+}
+
+/* 按钮样式优化 */
+.el-button--primary {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3) !important;
+}
+
+.el-button--success {
+  background: linear-gradient(135deg, var(--success-color) 0%, var(--success-light) 100%) !important;
+  border: none !important;
+  box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3) !important;
+}
+
+.el-button--danger {
+  background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-light) 100%) !important;
+  border: none !important;
+  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3) !important;
+}
+
+.el-button--warning {
+  background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-light) 100%) !important;
+  border: none !important;
+  box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3) !important;
+}
+
+.el-button--info {
+  background: linear-gradient(135deg, var(--info-color) 0%, var(--info-light) 100%) !important;
+  border: none !important;
+  box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* 动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity var(--transition-time);
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 响应式工具类 */
+.hidden-xs-only {
+  @media (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.hidden-sm-only {
+  @media (min-width: 768px) and (max-width: 991px) {
+    display: none !important;
+  }
+}
+
+.hidden-md-only {
+  @media (min-width: 992px) and (max-width: 1199px) {
+    display: none !important;
+  }
+}
+
+.hidden-lg-only {
+  @media (min-width: 1200px) and (max-width: 1919px) {
+    display: none !important;
+  }
+}
+
+.hidden-xl-only {
+  @media (min-width: 1920px) {
+    display: none !important;
+  }
+}
+
+/* 通用助手类 */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.mr-10 {
+  margin-right: 10px;
+}
+
+.p-10 {
+  padding: 10px;
+}
+
+.p-20 {
+  padding: 20px;
+} 
