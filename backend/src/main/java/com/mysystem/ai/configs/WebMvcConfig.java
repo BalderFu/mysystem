@@ -36,7 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SaInterceptor(handle -> StpUtil.checkLogin()))
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/registry", "/user/login","/openApi/token","/user/upload","/*.png","/*.jpeg","/*.jpg","/upload/**");
+                .excludePathPatterns("/user/registry", "/user/login","/user/upload","/*.png","/*.jpeg","/*.jpg","/upload/**");
     }
 
     @Override
