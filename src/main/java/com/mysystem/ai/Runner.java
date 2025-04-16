@@ -1,6 +1,5 @@
-package com.sensitive.biz;
+package com.mysystem.ai;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonWriteFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -15,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 
 @Slf4j
 @SpringBootApplication
-@MapperScan("com.sensitive.biz.mapper")
+@MapperScan("com.mysystem.ai.mapper")
 public class Runner {
 
     public static void main(String[] args) {

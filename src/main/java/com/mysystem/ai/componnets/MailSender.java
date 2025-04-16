@@ -1,4 +1,4 @@
-package com.sensitive.biz.componnets;
+package com.mysystem.ai.componnets;
 
 import org.springframework.stereotype.Component;
 

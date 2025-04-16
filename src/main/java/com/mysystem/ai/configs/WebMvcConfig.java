@@ -1,4 +1,4 @@
-package com.sensitive.biz.configs;
+package com.mysystem.ai.configs;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.interceptor.SaInterceptor;

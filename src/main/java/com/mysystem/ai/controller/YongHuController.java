@@ -1,11 +1,8 @@
-package com.sensitive.biz.controller;
+package com.mysystem.ai.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
-import com.sensitive.biz.model.Result;
-import com.sensitive.biz.entity.User;
-import com.sensitive.biz.model.YonghuRegistry;
-import com.sensitive.biz.service.YonghuService;
+import com.mysystem.ai.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

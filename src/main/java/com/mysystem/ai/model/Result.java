@@ -1,4 +1,4 @@
-package com.sensitive.biz.model;
+package com.mysystem.ai.model;
 
 import lombok.Data;
 

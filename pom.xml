@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.biseh.sensitive</groupId>
-    <artifactId>com.biseh.sensitivei</artifactId>
+    <groupId>com.biseh.mysystem</groupId>
+    <artifactId>MySystem</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sensitive</name>
+    <name>MySystem</name>
 
     <dependencies>
         <dependency>
@@ -33,12 +33,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.23</version>
         </dependency>
-        <!-- IK分词器 -->
-        <dependency>
-            <groupId>com.jianggujin</groupId>
-            <artifactId>IKAnalyzer-lucene</artifactId>
-            <version>8.0.0</version>
-        </dependency>
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
@@ -59,11 +54,7 @@
             <artifactId>sa-token-spring-boot3-starter</artifactId>
             <version>1.37.0</version>
         </dependency>
-        <dependency>
-            <groupId>e-iceblue</groupId>
-            <artifactId>spire.doc</artifactId>
-            <version>12.4.1</version>
-        </dependency>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -71,12 +62,4 @@
         </dependency>
 
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>com.e-iceblue</id>
-            <name>e-iceblue</name>
-            <url>https://repo.e-iceblue.cn/repository/maven-public/</url>
-        </repository>
-    </repositories>
 </project>
