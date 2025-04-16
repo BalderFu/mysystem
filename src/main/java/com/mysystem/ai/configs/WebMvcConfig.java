@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -31,7 +30,7 @@ import java.util.Map;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class Configures implements WebMvcConfigurer{
+public class WebMvcConfig implements WebMvcConfigurer{
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -76,27 +75,4 @@ public class Configures implements WebMvcConfigurer{
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
-
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.OK)
-    public Map<String, String> handleException(Throwable e) {
-        log.error("Error occurs.", e);
-        Map<String, String> RESULT = new HashMap<String, String>() {{
-            put("code", "201");
-        }};
-        RESULT.put("message", e.getMessage());
-        return RESULT;
-    }
-
-    @ExceptionHandler(NotLoginException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public Map<String, String> handleException(NotLoginException e) {
-        log.error("User not login.", e);
-        Map<String, String> RESULT = new HashMap<String, String>() {{
-            put("code", "401");
-        }};
-        RESULT.put("message", e.getMessage());
-        return RESULT;
-    }
-
 }

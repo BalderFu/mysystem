@@ -3,7 +3,7 @@ package com.sensitive.biz.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
 import com.sensitive.biz.model.Result;
-import com.sensitive.biz.entity.Yonghu;
+import com.sensitive.biz.entity.User;
 import com.sensitive.biz.model.YonghuRegistry;
 import com.sensitive.biz.service.YonghuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +33,14 @@ public class YongHuController {
     }
 
     @GetMapping("/userInfo")
-    public Result<Yonghu> getUserInfo() {
-        Yonghu yonghu = yonghuService.getById(Long.valueOf((String) StpUtil.getLoginId()));
-        if (yonghu.getRole().equals("admin")) {
-            yonghu.setRole("管理员");
+    public Result<User> getUserInfo() {
+        User user = yonghuService.getById(Long.valueOf((String) StpUtil.getLoginId()));
+        if (user.getRole().equals("admin")) {
+            user.setRole("管理员");
         } else {
-            yonghu.setRole("普通用户");
+            user.setRole("普通用户");
         }
-        return Result.success(yonghu);
+        return Result.success(user);
     }
 
     @PostMapping("/logout")

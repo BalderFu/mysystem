@@ -22,4 +22,11 @@ public class Result<T> {
         result.setMessage("请求成功");
         return result;
     }
+
+    public static <T> Result<T> error(String message) {
+        Result<T> result = new Result<T>();
+        result.setCode(201);
+        result.setMessage(message);
+        return result;
+    }
 }
