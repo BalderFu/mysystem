@@ -7,12 +7,42 @@ spring:
     url: jdbc:mysql://localhost:3306/my_system?useUnicode=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
     username: root
     password: 123456
+  ai:
+    ollama:
+      base-url: http://192.168.0.128:11434
+      chat:
+        enabled: true
+        options:
+          model: deepseek-r1:1.5b
+  data:
+    redis:
+      # Redis数据库索引（默认为0）
+      database: 0
+      # Redis服务器地址
+      host: 127.0.0.1
+      # Redis服务器连接端口
+      port: 6379
+      # Redis服务器连接密码（默认为空）
+      password: 123456
+      # 连接超时时间
+      timeout: 10s
+      lettuce:
+        pool:
+          # 连接池最大连接数
+          max-active: 200
+          # 连接池最大阻塞等待时间（使用负值表示没有限制）
+          max-wait: -1ms
+          # 连接池中的最大空闲连接
+          max-idle: 10
+          # 连接池中的最小空闲连接
+          min-idle: 0
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  web:
-    resources:
-      static-locations: file:${user.dir}/src/main/resources/upload
+  global-config:
+    db-config:
+      id-type: auto
+
 sa-token:
   token-name: authorization
   token-prefix: Bearer

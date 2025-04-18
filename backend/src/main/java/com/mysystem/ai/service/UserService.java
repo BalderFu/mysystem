@@ -2,10 +2,13 @@ package com.mysystem.ai.service;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mysystem.ai.entity.User;
 import com.mysystem.ai.mapper.UserMapper;
+import com.mysystem.ai.model.ResetPwsReq;
 import com.mysystem.ai.model.UserRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,9 +29,17 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         user.setPassword(userRegistry.getPassword());
         user.setEmail(userRegistry.getEmail());
         user.setPhone(userRegistry.getPhone());
-//        user.setAvatar(yonghuRegistry.getAvatar());
+        user.setNickname(userRegistry.getNickname());
         userMapper.insert(user);
         StpUtil.login(user.getId());
+    }
+
+    public boolean existPhone(String phone) {
+        return userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getPhone, phone)) > 0;
+    }
+
+    public boolean existEmail(String email) {
+        return userMapper.selectCount(new LambdaQueryWrapper<User>().eq(User::getEmail, email)) > 0;
     }
 
 
@@ -42,5 +53,18 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             throw new RuntimeException("密码错误！");
         }
         StpUtil.login(yh.getId());
+    }
+
+    public void resetPassword(ResetPwsReq req) {
+        Long loginId = Long.valueOf((String) StpUtil.getLoginId());
+        User user = userMapper.selectById(loginId);
+        if (ObjectUtil.isEmpty(user)) {
+            throw new RuntimeException("用户已失效");
+        }
+        if (!StrUtil.equals(user.getPassword(), req.getOriginPassword())) {
+            throw new RuntimeException("密码错误");
+        }
+        user.setPassword(req.getNewPassword());
+        userMapper.updateById(user);
     }
 }

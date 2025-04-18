@@ -16,40 +16,97 @@
         auto-complete="on"
       >
         <h3 class="form-title">用户登录</h3>
-
-        <el-form-item prop="username">
-          <el-input
-            ref="username"
-            v-model="loginForm.username"
-            placeholder="请输入用户名"
-            prefix-icon="el-icon-user"
-            name="username"
-            type="text"
-            tabindex="1"
-            auto-complete="on"
-          />
-        </el-form-item>
-
-        <el-form-item prop="password">
-          <el-input
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            placeholder="请输入密码"
-            prefix-icon="el-icon-lock"
-            name="password"
-            tabindex="2"
-            auto-complete="on"
-            @keyup.enter.native="handleLogin"
+        
+        <!-- 登录方式切换器 -->
+        <div class="login-type-switch">
+          <div 
+            class="switch-item" 
+            :class="{ active: loginType === 'account' }" 
+            @click="switchLoginType('account')"
           >
-            <i
-              slot="suffix"
-              class="el-input__icon password-eye"
-              :class="passwordType === 'password' ? 'el-icon-view' : 'el-icon-hide'"
-              @click="showPwd"
-            ></i>
-          </el-input>
-        </el-form-item>
+            账号密码登录
+          </div>
+          <div 
+            class="switch-item" 
+            :class="{ active: loginType === 'phone' }" 
+            @click="switchLoginType('phone')"
+          >
+            邮箱验证码登录
+          </div>
+        </div>
+
+        <!-- 账号密码登录 -->
+        <template v-if="loginType === 'account'">
+          <el-form-item prop="username">
+            <el-input
+              ref="username"
+              v-model="loginForm.username"
+              placeholder="请输入用户名"
+              prefix-icon="el-icon-user"
+              name="username"
+              type="text"
+              tabindex="1"
+              auto-complete="on"
+            />
+          </el-form-item>
+
+          <el-form-item prop="password">
+            <el-input
+              ref="password"
+              v-model="loginForm.password"
+              :type="passwordType"
+              placeholder="请输入密码"
+              prefix-icon="el-icon-lock"
+              name="password"
+              tabindex="2"
+              auto-complete="on"
+              @keyup.enter.native="handleLogin"
+            >
+              <i
+                slot="suffix"
+                class="el-input__icon password-eye"
+                :class="passwordType === 'password' ? 'el-icon-view' : 'el-icon-hide'"
+                @click="showPwd"
+              ></i>
+            </el-input>
+          </el-form-item>
+        </template>
+
+        <!-- 邮箱验证码登录 -->
+        <template v-else>
+          <el-form-item prop="phone">
+            <el-input
+              v-model="loginForm.phone"
+              placeholder="请输入邮箱"
+              prefix-icon="el-icon-message"
+              name="email"
+              type="text"
+              tabindex="1"
+            />
+          </el-form-item>
+
+          <el-form-item prop="code">
+            <div class="verify-code-container">
+              <el-input
+                v-model="loginForm.code"
+                placeholder="请输入验证码"
+                prefix-icon="el-icon-message"
+                name="code"
+                type="text"
+                tabindex="2"
+                @keyup.enter.native="handleLogin"
+              />
+              <el-button 
+                type="primary" 
+                class="verify-code-button"
+                :disabled="codeBtnDisabled"
+                @click="getVerifyCode"
+              >
+                {{ codeButtonText }}
+              </el-button>
+            </div>
+          </el-form-item>
+        </template>
 
         <div class="form-actions">
           <el-button
@@ -160,25 +217,47 @@
 import { validUsername } from '@/utils/validate'
 import Constants from "@/utils/constants";
 import Cookies from 'js-cookie';
-import { login, registry } from "@/utils/inputs"
+import { login, loginWithPhone, registry, sendValidateCode } from "@/utils/inputs"
 
 export default {
   name: 'Login',
   data() {
+    // 手机号验证规则
+    const validatePhone = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入手机号码'));
+      } else if (!/^1[3-9]\d{9}$/.test(value)) {
+        callback(new Error('请输入正确的手机号码'));
+      } else {
+        callback();
+      }
+    };
+    
     return {
       isLoginMode: true,
+      loginType: 'account', // 登录类型：account-账号密码登录，phone-手机验证码登录
       passwordType: 'password',
       loading: false,
       imageUrl: '',
+      codeButtonText: '获取验证码',
+      codeBtnDisabled: false,
+      codeTimer: null,
       
       // 登录表单
       loginForm: {
         username: 'admin',
-        password: '123456'
+        password: '123456',
+        phone: '',
+        code: ''
       },
       loginRules: {
         username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+        phone: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
       },
       
       // 注册表单
@@ -205,6 +284,16 @@ export default {
     }
   },
   methods: {
+    // 切换登录类型（账号密码/手机验证码）
+    switchLoginType(type) {
+      if (this.loginType === type) return;
+      
+      this.loginType = type;
+      this.$nextTick(() => {
+        this.$refs.loginForm.clearValidate();
+      });
+    },
+    
     showPwd() {
       this.passwordType = this.passwordType === 'password' ? '' : 'password'
       this.$nextTick(() => {
@@ -249,24 +338,51 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          login(this.loginForm).then(response => {
-            this.loading = false
-            console.log("登录成功",response)
-            // if (response.code === 200) {
-              Cookies.set(Constants.ID.USER_TOKEN_KEY, response)
-              localStorage.setItem(Constants.ID.USER_TOKEN_KEY, response)
-              localStorage.setItem(Constants.ID.USER_KEY, JSON.stringify(response))
-              this.$router.push({ path: '/dashboard' })
-            // } else {
-            //   this.$message.error(response.msg || '登录失败')
-            // }
-          }).catch(() => {
-            this.loading = false
-            this.$message.error('登录失败，请稍后重试')
-          })
+          this.loading = true;
+          
+          // 根据登录类型选择不同的登录API
+          const loginApi = this.loginType === 'account' ? login : loginWithPhone;
+          
+          // 构造请求参数
+          const loginData = {};
+          if (this.loginType === 'account') {
+            loginData.username = this.loginForm.username;
+            loginData.password = this.loginForm.password;
+          } else {
+            loginData.email = this.loginForm.phone;
+            loginData.code = this.loginForm.code;
+          }
+          
+          loginApi(loginData).then(response => {
+            // 检查服务器响应状态
+            if (response.code !== 200) {
+              // 有错误信息，取消加载状态并显示错误
+              this.loading = false;
+              this.$message.error(response.message || '登录失败');
+              return;
+            }
+            
+            // 登录成功
+            this.loading = false;
+            console.log("登录成功", response);
+            
+            // 保存token和用户信息到localStorage
+            if (response.data) {
+              Cookies.set(Constants.ID.USER_TOKEN_KEY, response.data);
+              localStorage.setItem(Constants.ID.USER_TOKEN_KEY, response.data);
+              // 存储完整的响应对象，包括data字段中的用户信息
+              localStorage.setItem(Constants.ID.USER_KEY, JSON.stringify(response));
+              this.$router.push({ path: '/dashboard' });
+            } else {
+              this.$message.error('登录响应缺少用户信息');
+            }
+          }).catch(error => {
+            this.loading = false;
+            this.$message.error('登录失败，请稍后重试');
+            console.error('登录失败:', error);
+          });
         }
-      })
+      });
     },
     
     handleRegister() {
@@ -313,6 +429,78 @@ export default {
     
     handleError() {
       this.$message.error('上传失败，请稍后重试');
+    },
+
+    // 获取验证码
+    getVerifyCode() {
+      // 获取邮箱输入值
+      const email = this.loginForm.phone;
+      
+      // 1. 检查邮箱是否为空
+      if (!email) {
+        this.$message.error('请先输入邮箱地址');
+        return;
+      }
+      
+      // 2. 验证邮箱格式
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        this.$message.error('请输入正确的邮箱地址');
+        return;
+      }
+      
+      // 3. 发送验证码
+      this.codeBtnDisabled = true;
+      this.codeButtonText = '发送中...';
+      
+      sendValidateCode({ email: email }).then(response => {
+        console.log("验证码响应：", response)
+        
+        // 检查响应是否为null或undefined
+        if (!response) {
+          this.codeBtnDisabled = false
+          this.codeButtonText = '获取验证码'
+          this.$message.error('验证码发送失败，服务器无响应')
+          return
+        }
+        
+        // 检查响应状态
+        if (response.code !== 200) {
+          // 处理错误响应
+          this.codeBtnDisabled = false
+          this.codeButtonText = '获取验证码'
+          this.$message.error(response.message || '验证码发送失败')
+          return
+        }
+        
+        // 成功发送验证码
+        this.$message.success('验证码已发送，请注意查收')
+        // 开始倒计时
+        let countdown = 60
+        this.codeButtonText = `${countdown}秒后重发`
+        
+        this.codeTimer = setInterval(() => {
+          countdown--
+          this.codeButtonText = `${countdown}秒后重发`
+          if (countdown <= 0) {
+            clearInterval(this.codeTimer)
+            this.codeButtonText = '获取验证码'
+            this.codeBtnDisabled = false
+          }
+        }, 1000)
+      }).catch(error => {
+        console.log("发送验证码失败===", error)
+        this.codeBtnDisabled = false
+        this.codeButtonText = '获取验证码'
+        this.$message.error('验证码发送失败，请稍后重试')
+        console.error('发送验证码失败:', error)
+      })
+    }
+  },
+  destroyed() {
+    // 清除计时器
+    if (this.codeTimer) {
+      clearInterval(this.codeTimer)
     }
   }
 }
@@ -600,6 +788,71 @@ export default {
     .el-upload__tip {
       margin-top: 12px;
       color: var(--text-secondary);
+    }
+  }
+}
+
+.verify-code-container {
+  display: flex;
+  align-items: center;
+  
+  .el-input {
+    flex: 1;
+  }
+  
+  .verify-code-button {
+    margin-left: 10px;
+    width: 120px;
+    height: 45px;
+    border-radius: 8px;
+    font-size: 14px;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-dark) 100%);
+    border: none;
+    white-space: nowrap;
+  }
+}
+
+.login-type-switch {
+  display: flex;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  
+  .switch-item {
+    flex: 1;
+    text-align: center;
+    padding: 12px 0;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 14px;
+    transition: all 0.3s;
+    position: relative;
+    
+    &:hover {
+      color: white;
+    }
+    
+    &.active {
+      color: white;
+      background-color: rgba(56, 189, 248, 0.2);
+      font-weight: 500;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        background-color: var(--accent-color);
+        border-radius: 2px;
+      }
+    }
+    
+    &:first-child {
+      border-right: 1px solid rgba(56, 189, 248, 0.2);
     }
   }
 }

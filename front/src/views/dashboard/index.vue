@@ -1,167 +1,96 @@
 <template>
-  <div>
-    <table>
-      <tr>
-        <td>用户名：</td>
-        <td class = "weigth">{{userInfo.username}}</td>
-        
-      </tr>
-      <tr>
-        <td>角色：</td>
-        <td> {{userInfo.role}}</td>
-      </tr>
-      <tr>
-        <td>手机号码：</td>
-        <td> {{userInfo.phone}}</td>
-       
-      </tr>
-      <tr>
-        <td>头像：</td>
-        <!-- <td> {{userInfo.avatar}}</td> -->
-        <div class="demo-type">
-        <div>
-          <el-avatar :src="fullImageUrl"></el-avatar>
-        </div>
+  <div class="dashboard-container">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>手机信息录入</span>
       </div>
-      </tr>
-      <tr>
-        <td>邮箱：</td>
-        <td> {{userInfo.email}}</td>
-       
-      </tr>
-    </table>
+      <el-form ref="phoneForm" :model="phoneForm" label-width="120px">
+        <el-form-item label="手机名字">
+          <el-input v-model="phoneForm.name" placeholder="请输入手机型号名称"></el-input>
+        </el-form-item>
+        <el-form-item label="手机配置参数" class="textarea-item">
+          <el-input 
+            type="textarea" 
+            :rows="6" 
+            v-model="phoneForm.config"
+            placeholder="请输入详细配置参数，例如：CPU: Snapdragon 8 Gen 2, RAM: 12GB, Storage: 256GB, Screen: 6.7 inch AMOLED"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="手机特征" class="textarea-item features-textarea">
+          <el-input 
+            type="textarea" 
+            :rows="8"
+            v-model="phoneForm.features"
+            placeholder="请输入手机的主要特征或卖点，例如：1亿像素主摄, 120W快充, IP68防水"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">提交</el-button>
+          <el-button @click="onReset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
-
 <script>
-import Constants from "@/utils/constants";
-import {userInfo} from "@/utils/inputs";
-// import mammoth from 'mammoth';
-
 export default {
-  name: "Dashboard",
+  name: 'Dashboard',
   data() {
     return {
-      baseUrl: "http://localhost:8090",
-      userInfo:{
-        username: "",
-        role: "",
-        createTime: "",
-        avartar: "",
-      },
-
-
-    }
+      phoneForm: {
+        name: '',
+        config: '',
+        features: ''
+      }
+    };
   },
   methods: {
-    handleSubmit() {
-      this.$refs.ruleForm.validate(valid => {
-        if (!valid) return;
-
-        if (this.title === "新增") {
-          this.tableData.push(this.dataForm);
-        } else {
-          const index = this.tableData.findIndex(item => item.id === this.dataForm.id);
-          this.tableData[index] = this.dataForm;
-        }
-        this.addShow = false;
-        this.handlePersistence()
-      })
+    onSubmit() {
+      console.log('提交的表单数据:', this.phoneForm);
+      // 在这里可以添加将数据发送到后端的逻辑
+      this.$message.success('提交成功！');
+      // 提交后可以选择清空表单
+      // this.resetForm(); 
     },
-
-    handleEdit(row) {
-      this.dataForm = row;
-      this.title = "修改";
-      this.addShow = true;
-    },
-
-    handleRemove(row) {
-      const index = this.tableData.findIndex(item => item.id === row.id);
-      this.tableData.splice(index, 1);
-      this.handlePersistence()
-    },
-
-    handleAdd() {
-      this.title = "新增";
-      this.addShow = true;
-      let id = this.generateRandomId(64);
-      while (this.tableData.findIndex(item => item.id === id) > 0) {
-        id = this.generateRandomId(64);
-      }
-      this.dataForm = {
-        id,
-        name: ""
+    onReset() {
+      this.$refs.phoneForm.resetFields();
+      this.phoneForm = {
+        name: '',
+        config: '',
+        features: ''
       };
-    },
-
-    generateRandomId(length = 10) {
-      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let randomId = '';
-
-      for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        randomId += characters[randomIndex];
-      }
-
-      return randomId;
-    },
-
-    handlePersistence() {
-      localStorage.setItem(Constants.ID.SENSITIVE_KEY, JSON.stringify(this.tableData));
-    },
-
-    getList() {
-      const list = JSON.parse(localStorage.getItem(Constants.ID.SENSITIVE_KEY) || []);
-      console.log(list)
-      this.tableData = list;
-    },
-    async loadUserInfo(){
-      await userInfo().then(resp =>{
-      const response = JSON.stringify(resp);
-      console.log(response);
-      if(response){
-        this.userInfo = JSON.parse(response);
-      }else{
-        this.userInfo = {};
-      }
-      
-    },
-    error => {
-
-    })
-    }
-
-  },
-  mounted() {
-    this.loadUserInfo();
-  },
-  activated() {
-    this.loadUserInfo();
-  },
-  computed: {
-    fullImageUrl() {
-      if (!this.userInfo || !this.userInfo.avatar) {
-        return require('@/assets/logo.png'); // 默认头像
-      }
-      return `${this.baseUrl}/upload/${this.userInfo.avatar}?t=${new Date().getTime()}`;
+      console.log('表单已重置');
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-   table tr td {
-    font-size: 24px;
-    color: $dark_gray;
-    margin: 0px auto 50px auto;
-   }
+<style lang="scss" scoped>
+.dashboard-container {
+  padding: 20px;
+}
 
-   .weigth {
-     font-size: 36px
-   }
+.box-card {
+  // 可以添加卡片样式
+}
 
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both
+}
+
+// 通用 textarea 样式
+.textarea-item ::v-deep .el-textarea__inner {
+  min-height: 120px !important; /* 配置参数的最小高度 */
+}
+
+// 单独设置手机特征的高度
+.features-textarea ::v-deep .el-textarea__inner {
+  min-height: 160px !important; /* 设置一个更高的高度 */
+}
 </style>

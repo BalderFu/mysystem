@@ -5,7 +5,7 @@ import router from '@/router';
 
 const request = axios.create({
     baseURL:"http://localhost:8090",
-    timeout:5000
+    timeout:60000
 })
 
 request.interceptors.request.use(
@@ -34,14 +34,15 @@ request.interceptors.response.use(
                     // **阻止后续代码执行，但不抛出异常**
                 return new Promise(() => {});
             }
-            Message({
-                message: response.data.message,
-                type: "error"
-            });
-            return new Promise(() => {});
+            // Message({
+            //     message: response.data.message,
+            //     type: "error"
+            // });
+            // return new Promise(() => {});
+        
         }
         console.log("response拦截器处理: ",response.data)
-        return response.data.data;
+        return response.data;
     },
     (error) => {
         Promise.reject(error);

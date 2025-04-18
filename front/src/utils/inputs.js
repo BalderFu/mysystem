@@ -98,3 +98,51 @@ export function uploadPic(data) {
         }
     })
 }
+
+export function updateUserInfo(data) {
+    return create({
+        url: "/user/update",
+        method: "put",
+        data: data
+    })
+}
+
+export function resetPassword(data) {
+    return create({
+        url: "/user/resetPws",
+        method: "put",
+        data: data
+    })
+}
+
+export function sendValidateCode(params) {
+    return create({
+        url: "/user/sendValidateCode",
+        method: "get",
+        params: params
+    })
+}
+
+export function loginWithPhone(data) {
+    return create({
+        url: "/user/loginWithPhone",
+        method: "post",
+        data: data
+    })
+}
+
+export function getChatSessions(params) {
+    return create({
+        url: "/chat/sessionPage",
+        method: "get",
+        params: params
+    })
+}
+
+export function chatPage(params) {
+    return create({
+        url: "/chat/chatPage",
+        method: "get",
+        params: params
+    })
+}

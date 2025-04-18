@@ -12,6 +12,9 @@ import '@/styles/main.scss';
 axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
 Vue.prototype.$axios = axios;
 
+// 创建全局事件总线
+Vue.prototype.$eventBus = new Vue();
+
 // 使用 Element UI
 Vue.use(ElementUI, {
   size: 'medium' // 设置组件默认尺寸

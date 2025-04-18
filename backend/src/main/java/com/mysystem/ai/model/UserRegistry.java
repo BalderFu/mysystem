@@ -14,4 +14,7 @@ public class UserRegistry {
     private String phone;
     private String email;
     private String avatar;
+    private String nickname;
+
+
 }

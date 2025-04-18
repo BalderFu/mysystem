@@ -15,6 +15,10 @@ const routes = [{
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index'),
     },{
+        path: 'personal',
+        name: 'Personal',
+        component: () => import('@/views/personal/index'),
+    },{
         path: 'openapi',
         name: 'OpenApi',
         component: () => import('@/views/openapi/index'),
@@ -39,6 +43,40 @@ const routes = [{
     path: "/login",
     component: () => import('@/views/login/index'),
 }]
+
+// 修改Vue Router的push方法，避免重复导航错误
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(error => {
+    // 忽略所有导航相关错误
+    if (error.name && (
+      error.name === 'NavigationDuplicated' || 
+      error.name === 'NavigationCancelled' ||
+      error.name.includes('Navigation')
+    )) {
+      console.log(`路由导航错误被拦截: ${error.name}`)
+      return Promise.resolve(false)
+    }
+    return Promise.reject(error)
+  })
+}
+
+// 同样修改replace方法
+const originalReplace = VueRouter.prototype.replace
+VueRouter.prototype.replace = function replace(location) {
+  return originalReplace.call(this, location).catch(error => {
+    // 忽略所有导航相关错误
+    if (error.name && (
+      error.name === 'NavigationDuplicated' || 
+      error.name === 'NavigationCancelled' ||
+      error.name.includes('Navigation')
+    )) {
+      console.log(`路由导航错误被拦截: ${error.name}`)
+      return Promise.resolve(false)
+    }
+    return Promise.reject(error)
+  })
+}
 
 const router = new VueRouter({
     mode: 'history',

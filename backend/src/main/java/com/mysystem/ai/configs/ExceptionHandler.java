@@ -29,8 +29,8 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(NotLoginException.class)
     @ResponseStatus(HttpStatus.OK)
     public Result<Void> handleException(NotLoginException e, HandlerMethod handlerMethod, HttpServletRequest request, HttpServletResponse response) {
-        log.error("Request URI:{}, Method:{},User not login.", request.getRequestURI(), handlerMethod.getMethod().getName(), e);
-        return Result.error(e.getMessage());
+        log.error("Request URI:{}, Method:{},User not login. ", request.getRequestURI(), handlerMethod.getMethod().getName(), e);
+        return Result.error(401, e.getMessage());
     }
 
 }
