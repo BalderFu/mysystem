@@ -38,9 +38,9 @@ CREATE TABLE `my_system`.`phone_info`
 (
     `id`          BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `user_id`     BIGINT  NOT NULL  COMMENT '用户',
-    `name`  BIGINT  NOT NULL  COMMENT '手机名',
-    `config`  text  NOT NULL  COMMENT '配置',
-    `features`  text  NOT NULL  COMMENT '特性',
+    `name`  varchar(64)  NOT NULL  COMMENT '手机名',
+    `config`  varchar(1024)  NOT NULL  COMMENT '配置',
+    `features`  varchar(2048)  NOT NULL  COMMENT '特性',
     `create_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB COMMENT = '聊天';
 

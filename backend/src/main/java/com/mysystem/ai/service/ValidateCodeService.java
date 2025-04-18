@@ -3,6 +3,7 @@ package com.mysystem.ai.service;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ShearCaptcha;
 import cn.hutool.core.util.StrUtil;
+import com.mysystem.ai.componnets.MailSender;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +24,17 @@ public class ValidateCodeService {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private UserService userService;
+    @Autowired
+    private MailSender mailSender;
 
-    public void send(String email, HttpServletResponse response) throws IOException {
+    public void send(String email, HttpServletResponse response) {
         if (!userService.existEmail(email)) {
             throw new RuntimeException("邮箱不存在");
         }
         ShearCaptcha shearCaptcha = CaptchaUtil.createShearCaptcha(150, 40, 5, 4);
         log.info("============登陆验证码：【{}】1分钟有效=====================", shearCaptcha.getCode());
+        //todo 发送验证码到邮箱
+        //mailSender.send...
         stringRedisTemplate.opsForValue().set(CAPTCHA_SESSION_KEY + email, shearCaptcha.getCode(), Duration.ofSeconds(60));
     }
 

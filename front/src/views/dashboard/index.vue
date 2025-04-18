@@ -25,7 +25,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">提交</el-button>
+          <el-button type="primary" @click="onSubmit" :loading="loading">{{ loading ? '提交中...' : '提交' }}</el-button>
           <el-button @click="onReset">重置</el-button>
         </el-form-item>
       </el-form>
@@ -34,6 +34,9 @@
 </template>
 
 <script>
+// 导入请求函数 (假设路径正确)
+import create from "@/utils/request"; 
+
 export default {
   name: 'Dashboard',
   data() {
@@ -42,16 +45,47 @@ export default {
         name: '',
         config: '',
         features: ''
-      }
+      },
+      loading: false // 添加 loading 状态
     };
   },
   methods: {
     onSubmit() {
-      console.log('提交的表单数据:', this.phoneForm);
-      // 在这里可以添加将数据发送到后端的逻辑
-      this.$message.success('提交成功！');
-      // 提交后可以选择清空表单
-      // this.resetForm(); 
+      // 可选：添加表单验证
+      this.$refs.phoneForm.validate(valid => {
+        if (valid) {
+          console.log('表单验证通过，准备提交:', this.phoneForm);
+          this.loading = true; // 开始加载
+          
+          create({
+            url: '/phoneInfo', // 后端接口地址
+            method: 'post',
+            data: this.phoneForm // 发送表单数据
+          }).then(response => {
+            console.log('提交响应:', response);
+            this.loading = false; // 结束加载
+            
+            // 根据后端响应判断是否成功
+            if (response && response.code === 200) { 
+              this.$message.success('提交成功！');
+              // 成功后可以选择清空表单
+              this.onReset(); 
+            } else {
+              // 处理后端返回的错误信息
+              this.$message.error(response.message || '提交失败，请稍后重试');
+            }
+          }).catch(error => {
+            console.error('提交错误:', error);
+            this.loading = false; // 结束加载
+            this.$message.error('提交时发生网络错误，请检查连接');
+          });
+          
+        } else {
+          console.log('表单验证失败');
+          this.$message.warning('请检查表单内容是否填写完整');
+          return false;
+        }
+      });
     },
     onReset() {
       this.$refs.phoneForm.resetFields();
