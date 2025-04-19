@@ -42,9 +42,20 @@ CREATE TABLE `my_system`.`phone_info`
     `config`  varchar(1024)  NOT NULL  COMMENT '配置',
     `features`  varchar(2048)  NOT NULL  COMMENT '特性',
     `create_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE = InnoDB COMMENT = '聊天';
+) ENGINE = InnoDB COMMENT = '手机号';
 
 
+CREATE TABLE `my_system`.`log_operation`
+(
+    `id`          BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `user_id`     BIGINT  NOT NULL  COMMENT '用户ID',
+    `username`  varchar(64)   COMMENT '用户名',
+    `url`  varchar(1024)  NOT NULL  COMMENT '配置',
+    `response`  text  NOT NULL  COMMENT '响应',
+    `request`  text  NOT NULL  COMMENT '请求',
+    `used` INTEGER  NOT NULL  COMMENT '使用时长',
+    `create_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE = InnoDB COMMENT = '操作记录';
 
 
 INSERT INTO `my_system`.`user` ( `role`, `username`, `password`, `phone`, `email`,`nickname`) VALUES

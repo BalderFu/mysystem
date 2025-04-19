@@ -14,26 +14,17 @@ const routes = [{
         path: 'dashboard',
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index'),
+        meta: { title: '内容生成', icon: 'el-icon-s-home' }
     },{
-        path: 'personal',
-        name: 'Personal',
-        component: () => import('@/views/personal/index'),
+        path: 'user',
+        name: 'User',
+        component: () => import('@/views/user/index'),
+        meta: { title: '用户管理', icon: 'el-icon-user' }
     },{
-        path: 'openapi',
-        name: 'OpenApi',
-        component: () => import('@/views/openapi/index'),
-    },{
-        path: 'sensitivetext',
-        name: 'SensitiveText',
-        component: () => import('@/views/sensitivetext/index'),
-    },{
-        path: 'sensitivetextcheck',
-        name: 'SensitiveTextCheck',
-        component: () => import('@/views/sensitivetextcheck/index'),
-    },{
-        path: 'sensitiveupload',
-        name: 'SensitiveUpload',
-        component: () => import('@/views/sensitiveupload/index'),
+        path: 'log',
+        name: 'Log',
+        component: () => import('@/views/log/index'),
+        meta: { title: '日志管理', icon: 'el-icon-document' }
     },{
         path: 'history',
         name: 'History',
@@ -41,40 +32,27 @@ const routes = [{
     }]
 }, {
     path: "/login",
+    name: "Login",
     component: () => import('@/views/login/index'),
 }]
 
 // 修改Vue Router的push方法，避免重复导航错误
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(error => {
-    // 忽略所有导航相关错误
-    if (error.name && (
-      error.name === 'NavigationDuplicated' || 
-      error.name === 'NavigationCancelled' ||
-      error.name.includes('Navigation')
-    )) {
-      console.log(`路由导航错误被拦截: ${error.name}`)
-      return Promise.resolve(false)
-    }
-    return Promise.reject(error)
+  return originalPush.call(this, location).catch(err => {
+    // 只打印错误，不抛出异常
+    console.log('路由导航错误:', err)
+    return Promise.resolve(false)
   })
 }
 
 // 同样修改replace方法
 const originalReplace = VueRouter.prototype.replace
 VueRouter.prototype.replace = function replace(location) {
-  return originalReplace.call(this, location).catch(error => {
-    // 忽略所有导航相关错误
-    if (error.name && (
-      error.name === 'NavigationDuplicated' || 
-      error.name === 'NavigationCancelled' ||
-      error.name.includes('Navigation')
-    )) {
-      console.log(`路由导航错误被拦截: ${error.name}`)
-      return Promise.resolve(false)
-    }
-    return Promise.reject(error)
+  return originalReplace.call(this, location).catch(err => {
+    // 只打印错误，不抛出异常
+    console.log('路由导航错误:', err)
+    return Promise.resolve(false)
   })
 }
 

@@ -2,23 +2,24 @@ package com.mysystem.ai.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mysystem.ai.entity.User;
-import com.mysystem.ai.model.ResetPwsReq;
-import com.mysystem.ai.model.Result;
-import com.mysystem.ai.model.UserRegistry;
-import com.mysystem.ai.model.ValidateLoginReq;
+import com.mysystem.ai.model.*;
 import com.mysystem.ai.service.UserService;
 import com.mysystem.ai.service.ValidateCodeService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -40,6 +41,11 @@ public class UserController {
     public Result<String> login(@Validated @RequestBody UserRegistry yonghuRegistry) {
         userService.login(yonghuRegistry);
         return Result.success(StpUtil.getTokenValue());
+    }
+
+    @GetMapping("/pager")
+    public Result<Page<User>> pager(@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize, @RequestParam("username") String username) {
+        return Result.success(userService.getBaseMapper().selectPage(new Page<User>(pageNo, pageSize), new LambdaQueryWrapper<User>().eq(StrUtil.isNotBlank(username), User::getUsername, username)));
     }
 
     @PostMapping("loginWithPhone")
@@ -67,7 +73,10 @@ public class UserController {
     @PutMapping("/update")
     public Result<Void> updateUserInfo(@Validated @RequestBody User user) {
         Long loginId = Long.valueOf((String) StpUtil.getLoginId());
-        user.setId(loginId);
+        User u = userService.getById(loginId);
+        if (!u.getRole().equals("admin")) {
+            throw new RuntimeException("只有管理员能修改");
+        }
         userService.updateById(user);
         return Result.success();
     }
@@ -75,6 +84,38 @@ public class UserController {
     @GetMapping("/sendValidateCode")
     public Result<Void> sendValidateCode(@RequestParam("email") String email, HttpServletResponse response) throws IOException {
         validateCodeService.send(email, response);
+        return Result.success();
+    }
+
+
+    @PostMapping("/add")
+    public Result<Void> add(@RequestBody User user) {
+        user.setNickname(user.getUsername());
+        userService.getOneOpt(new LambdaQueryWrapper<User>().eq(User::getUsername, user.getUsername())).ifPresent(u -> {
+            throw new RuntimeException("用户名已存在");
+        });
+        userService.getOneOpt(new LambdaQueryWrapper<User>().eq(User::getEmail, user.getEmail())).ifPresent(u -> {
+            throw new RuntimeException("邮箱已存在");
+        });
+        userService.save(user);
+        return Result.success();
+    }
+
+    @GetMapping("/delete")
+    public Result<Void> delete(@RequestParam("userId") Long userId) {
+        User user = userService.getById(StpUtil.getLoginIdAsLong());
+        if (!user.getRole().equals("admin")) {
+            throw new RuntimeException("只有管理员才能删除");
+        }
+        userService.removeById(userId);
+        return Result.success();
+    }
+
+    @PostMapping("/delete")
+    public Result<Void> delete(@RequestBody DeleteUsers deleteUsers) {
+        List<Long> userIds = deleteUsers.getUserIds();
+        userIds.remove(StpUtil.getLoginIdAsLong());
+        userService.removeByIds(userIds);
         return Result.success();
     }
 
