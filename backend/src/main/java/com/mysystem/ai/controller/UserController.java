@@ -45,7 +45,7 @@ public class UserController {
 
     @GetMapping("/pager")
     public Result<Page<User>> pager(@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize, @RequestParam("username") String username) {
-        return Result.success(userService.getBaseMapper().selectPage(new Page<User>(pageNo, pageSize), new LambdaQueryWrapper<User>().eq(StrUtil.isNotBlank(username), User::getUsername, username)));
+        return Result.success(userService.getBaseMapper().selectPage(new Page<User>(pageNo, pageSize), new LambdaQueryWrapper<User>().eq(StrUtil.isNotBlank(username), User::getUsername, username).eq(User::getRole, "normal")));
     }
 
     @PostMapping("loginWithPhone")
