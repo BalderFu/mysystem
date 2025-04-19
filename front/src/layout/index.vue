@@ -27,7 +27,7 @@
               <span>系统管理</span>
             </div>
             
-            <el-menu-item index="/user" class="menu-item">
+            <el-menu-item v-if="isAdmin" index="/user" class="menu-item">
               <i class="el-icon-user"></i>
               <span slot="title">用户管理</span>
             </el-menu-item>
@@ -152,7 +152,8 @@ export default {
       sessionMenuTitle: "会话列表",
       sessionData: [],
       sessionsLoading: false,
-      isNewSessionActive: false
+      isNewSessionActive: false,
+      isAdmin: false
     }
   },
   computed: {
@@ -190,6 +191,13 @@ export default {
     }
   },
   methods: {
+    checkAdminRole() {
+      const user = localStorage.getItem(Constants.ID.USER_KEY);
+      if (user) {
+        const userInfo = JSON.parse(user);
+        this.isAdmin = userInfo.data.role == '管理员';
+      }
+    },
     handleSelect(index, indexPath) {
       console.log('选择菜单项:', index, indexPath);
       if (this.$route.path === index) {
@@ -412,6 +420,7 @@ export default {
   },
   created() {
     this.$eventBus.$on('refresh-sessions', this.fetchChatSessionsForMenu);
+    this.checkAdminRole();
   },
   mounted() {
     const user = localStorage.getItem(Constants.ID.USER_KEY);

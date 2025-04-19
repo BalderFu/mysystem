@@ -19,7 +19,11 @@ const routes = [{
         path: 'user',
         name: 'User',
         component: () => import('@/views/user/index'),
-        meta: { title: '用户管理', icon: 'el-icon-user' }
+        meta: { 
+            title: '用户管理',
+            icon: 'user',
+            roles: ['管理员'] // 确保与后端返回的角色值完全匹配
+        }
     },{
         path: 'log',
         name: 'Log',
