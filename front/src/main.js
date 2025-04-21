@@ -11,6 +11,7 @@ import '@/styles/main.scss';
 
 // 配置 axios
 axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
+axios.defaults.baseURL = 'http://localhost:8090';
 Vue.prototype.$axios = axios;
 
 // 创建全局事件总线

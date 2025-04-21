@@ -5,15 +5,11 @@ import lombok.Data;
 
 import java.util.Date;
 
-@TableName("local_chat")
+@TableName("sys_access")
 @Data
-public class LocalChat {
-
+public class SysAccess {
     private Long id;
-    private Long userId;
-    private Long sessionId;
-    private String ask;
-    private String think;
-    private String reply;
+    private Integer count;
+    private String accessDate;
     private Date createTime;
 }

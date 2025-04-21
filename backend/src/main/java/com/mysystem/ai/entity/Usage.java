@@ -5,13 +5,12 @@ import lombok.Data;
 
 import java.util.Date;
 
-@TableName("phone_info")
 @Data
-public class PhoneInfo {
+@TableName("`usage`")
+public class Usage {
     private Long id;
-    private String name;
-    private Long userId;
-    private String config;
-    private String features;
+    private Long arithmeticId;
+    private String arithmeticName;
+    private Boolean state;
     private Date createTime;
 }

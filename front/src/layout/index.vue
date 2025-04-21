@@ -4,7 +4,7 @@
       <el-aside width="210px" class="sidebar-container">
         <div class="logo-container">
           <img src="@/assets/logo.png" alt="Logo" class="logo">
-          <span class="title">文案生成系统</span>
+          <span class="title">哈希破解系统</span>
         </div>
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <el-menu
@@ -18,14 +18,23 @@
           >
             <el-menu-item index="/dashboard" class="menu-item">
               <i class="el-icon-s-home"></i>
-              <span slot="title">内容生成</span>
+              <span slot="title">首页</span>
             </el-menu-item>
             
-            <div class="menu-divider"></div>
-            <div class="menu-section-title">
-              <i class="el-icon-setting"></i>
-              <span>系统管理</span>
-            </div>
+            <el-menu-item index="/algorithm" class="menu-item">
+              <i class="el-icon-s-platform"></i>
+              <span slot="title">算法管理</span>
+            </el-menu-item>
+            
+            <el-menu-item index="/crack" class="menu-item">
+              <i class="el-icon-key"></i>
+              <span slot="title">算法破解</span>
+            </el-menu-item>
+
+            <el-menu-item index="/library" class="menu-item">
+              <i class="el-icon-collection"></i>
+              <span slot="title">算法资料库</span>
+            </el-menu-item>
             
             <el-menu-item v-if="isAdmin" index="/user" class="menu-item">
               <i class="el-icon-user"></i>
@@ -37,53 +46,7 @@
               <span slot="title">日志管理</span>
             </el-menu-item>
             
-            <div class="menu-divider"></div>
-            <div class="menu-section-title">
-              <i class="el-icon-chat-line-round"></i>
-              <span>{{ sessionMenuTitle }}</span>
-              <div class="add-session-btn" @click.stop="createNewSession" title="创建新会话">
-                <i class="el-icon-plus"></i>
-              </div>
-            </div>
             
-            <div v-loading="sessionsLoading" class="session-list">
-              <div 
-                v-if="isNewSessionActive"
-                class="session-item session-active session-disabled"
-                @click="() => {}"  
-              >
-                <div class="session-icon-container">
-                  <i class="el-icon-chat-dot-round"></i>
-                </div>
-                <span class="session-name">新会话...</span>
-              </div>
-
-              <template v-if="sessionData.length > 0">
-                <div 
-                  v-for="session in sessionData" 
-                  :key="session.id"
-                  @click="handleSessionClick(session)"
-                  class="session-item"
-                  :class="{ 
-                    'session-active': isActiveSession(session), 
-                    'session-disabled': isActiveSession(session) 
-                  }"
-                >
-                  <div class="session-icon-container">
-                    <i class="el-icon-chat-dot-round"></i>
-                  </div>
-                  <span class="session-name">{{ session.displayTitle }}</span>
-              </div>
-              </template>
-              
-              <div v-if="!sessionsLoading && sessionData.length === 0 && !isNewSessionActive" class="empty-session-tip">
-                <i class="el-icon-info"></i>
-                <span>暂无会话记录</span>
-                <el-button type="primary" size="small" class="create-session-btn" @click="createNewSession">
-                  <i class="el-icon-plus"></i> 创建新会话
-                </el-button>
-              </div>
-              </div>
             
           </el-menu>
           
@@ -166,25 +129,17 @@ export default {
     currentPageTitle() {
       const path = this.$route.path;
       const routeMap = {
-        '/dashboard': '内容生成',
+        '/': '首页',
+        '/dashboard': '首页',
+        '/algorithm': '算法管理',
+        '/crack': '算法破解',
+        '/library': '算法库',
         '/user': '用户管理',
         '/log': '日志管理',
-        '/personal': '个人中心',
-        '/sensitiveupload': '生成文案',
-        '/sensitivetextcheck': '文案导出',
-        '/history': '聊天记录'
+        '/personal': '个人中心'
       };
       
-      if (path === '/history' && this.$route.query.id && this.sessionData.length > 0) {
-        const currentSession = this.sessionData.find(s => s.id.toString() === this.$route.query.id.toString());
-        if (currentSession) {
-          return currentSession.title || '聊天记录';
-        }
-      } else if (path === '/history' && !this.$route.query.id) {
-          return '新会话';
-      }
-      
-      return routeMap[path] || '文案生成系统';
+      return routeMap[path] || '哈希破解系统';
     },
     isViewingNewChat() {
       return this.$route.path === '/history' && !this.$route.query.id;
@@ -432,8 +387,6 @@ export default {
     
     this.updateTime();
     this.timer = setInterval(this.updateTime, 1000);
-    
-    this.fetchChatSessionsForMenu();
   },
   beforeDestroy() {
     if (this.timer) {

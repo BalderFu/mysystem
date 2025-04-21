@@ -139,7 +139,7 @@
 
 <script>
 import Constants from "@/utils/constants";
-import { updateUserInfo, uploadPic, resetPassword, getChatSessions } from "@/utils/inputs";
+import { updateUserInfo, uploadPic, resetPassword } from "@/utils/inputs";
 
 export default {
   name: "Personal",
@@ -200,7 +200,7 @@ export default {
   },
   created() {
     this.getUserInfo();
-    this.fetchChatSessions();
+ 
   },
   computed: {
     // 判断是否有任何字段正在编辑或数据发生变化
@@ -434,28 +434,7 @@ export default {
       });
     },
     
-    // 获取会话信息
-    fetchChatSessions() {
-      this.sessionsLoading = true;
-      
-      getChatSessions({
-        page: this.currentPage,
-        size: this.pageSize
-      }).then(response => {
-        console.log("会话信息：", response);
-        this.sessionsLoading = false;
-        
-        if (response && response.code === 200 && response.data) {
-          this.chatSessions = response.data.records || [];
-          this.totalSessions = response.data.total || 0;
-        } else {
-          this.$message.error('获取会话信息失败');
-        }
-      }).catch(error => {
-        this.sessionsLoading = false;
-        console.error('获取会话信息失败:', error);
-      });
-    },
+    
     
     // 分页大小改变
     handleSizeChange(size) {

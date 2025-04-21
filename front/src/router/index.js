@@ -14,7 +14,27 @@ const routes = [{
         path: 'dashboard',
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index'),
-        meta: { title: '内容生成', icon: 'el-icon-s-home' }
+        meta: { title: '首页', icon: 'el-icon-s-home' }
+    },{
+        path: 'algorithm',
+        name: 'Algorithm',
+        component: () => import('@/views/algorithm/index'),
+        meta: { title: '算法管理', icon: 'el-icon-s-platform' }
+    },{
+        path: 'crack',
+        name: 'Crack',
+        component: () => import('@/views/crack/index'),
+        meta: { title: '算法破解', icon: 'el-icon-key' }
+    },{
+        path: 'library',
+        name: 'Library',
+        component: () => import('@/views/library/index'),
+        meta: { title: '算法库', icon: 'el-icon-collection' }
+    },{
+        path: 'personal',
+        name: 'Personal',
+        component: () => import('@/views/personal/index'),
+        meta: { title: '个人中心', icon: 'el-icon-user' }
     },{
         path: 'user',
         name: 'User',

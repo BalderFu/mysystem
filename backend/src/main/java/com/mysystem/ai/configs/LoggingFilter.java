@@ -1,6 +1,7 @@
 package com.mysystem.ai.configs;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.StrUtil;
 import com.mysystem.ai.entity.LogOperation;
 import com.mysystem.ai.entity.User;
 import com.mysystem.ai.service.LogOperationService;
@@ -10,13 +11,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
@@ -24,8 +24,10 @@ import java.nio.charset.StandardCharsets;
 public class LoggingFilter implements Filter {
 
     @Autowired
+    @Lazy
     private LogOperationService logOperationService;
     @Autowired
+    @Lazy
     private UserService userService;
 
     @Override
@@ -46,15 +48,6 @@ public class LoggingFilter implements Filter {
 
             String requestBody = getRequestBody(wrappedRequest);
             String responseBody = getResponseBody(wrappedResponse);
-
-            log.info(">>> {} {} | Status: {} | Time: {}ms\nRequestBody: {}\nResponseBody: {}",
-                    request.getMethod(),
-                    request.getRequestURI(),
-                    response.getStatus(),
-                    duration,
-                    requestBody,
-                    responseBody);
-
             wrappedResponse.copyBodyToResponse();
             Long userId = null;
             try {
@@ -62,7 +55,7 @@ public class LoggingFilter implements Filter {
             } catch (Exception e) {
             }
             try {
-                saveLog(userId, request.getRequestURI(), request.getQueryString(),new String(responseBody.getBytes(StandardCharsets.UTF_8)), duration);
+                saveLog(userId, request.getRequestURI(), StrUtil.isBlank(requestBody) ? request.getQueryString() : requestBody, new String(responseBody.getBytes(StandardCharsets.UTF_8)), duration);
             } catch (Exception e) {
                 log.error("统计出错, ", e);
             }
@@ -86,7 +79,7 @@ public class LoggingFilter implements Filter {
     }
 
 
-    private void saveLog(Long userId, String uri,String req, String res, Long used) {
+    private void saveLog(Long userId, String uri, String req, String res, Long used) {
         User user;
         LogOperation logOperation = new LogOperation();
         logOperation.setUserId(userId == null ? -1L : userId);

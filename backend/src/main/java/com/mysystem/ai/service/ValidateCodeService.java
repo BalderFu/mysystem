@@ -3,18 +3,14 @@ package com.mysystem.ai.service;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.ShearCaptcha;
 import cn.hutool.core.util.StrUtil;
-import com.mysystem.ai.componnets.MailSender;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -24,8 +20,7 @@ public class ValidateCodeService {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private UserService userService;
-    @Autowired
-    private MailSender mailSender;
+
 
     public void send(String email, HttpServletResponse response) {
         if (!userService.existEmail(email)) {
@@ -45,7 +40,7 @@ public class ValidateCodeService {
             throw new RuntimeException("验证码已过期");
         }
         if (!Objects.equals(validateCode, code)) {
-           throw new RuntimeException("验证码错误");
+            throw new RuntimeException("验证码错误");
         }
     }
 }

@@ -131,17 +131,98 @@ export function loginWithPhone(data) {
     })
 }
 
-export function getChatSessions(params) {
+export function arithmeticPage(params) {
     return create({
-        url: "/chat/sessionPage",
+        url: "/hashArithmetic/page",
         method: "get",
         params: params
     })
 }
 
-export function chatPage(params) {
+export function addArithmetic(data) {
     return create({
-        url: "/chat/chatPage",
+        url: "/hashArithmetic",
+        method: "post",
+        data: data
+    })
+}
+
+export function updateArithmetic(data) {
+    return create({
+        url: "/hashArithmetic",
+        method: "put",
+        data: data
+    })
+}
+
+export function deleteArithmetic(params) {
+    return create({
+        url: "/hashArithmetic",
+        method: "delete",
+        params: params
+    })
+}
+
+export function getArithmeticById(params) {
+    return create({
+        url: "/hashArithmetic",
+        method: "get",
+        params: params
+    })
+}
+
+
+export function getDictPage(params) {
+    return create({
+        url: "/dict/page",
+        method: "get",
+        params: params
+    })
+}
+
+export function addArithmeticHouse(data) {
+    return create({
+        url: "/dict",
+        method: "post",
+        data: data
+    })
+}
+
+export function updateArithmeticHouse(data) {
+    return create({
+        url: "/dict",
+        method: "put",  
+        data: data
+    })
+}
+
+export function deleteArithmeticHouse(params) {
+    return create({
+        url: "/dict",
+        method: "delete",
+        params: params
+    })
+}
+
+export function getArithmeticHouseById(params) {
+    return create({
+        url: "/dict",
+        method: "get",
+        params: params
+    })
+}
+
+export function crackArithmetic(data) {
+    return create({
+        url: "/dict/crack",
+        method: "post",
+        data: data
+    })
+}
+
+export function hashList(params) {
+    return create({
+        url: "/hashArithmetic/list",
         method: "get",
         params: params
     })

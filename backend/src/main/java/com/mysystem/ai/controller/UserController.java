@@ -20,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -35,6 +37,11 @@ public class UserController {
     public Result<String> registry(@Validated @RequestBody UserRegistry yonghuRegistry) {
         userService.registry(yonghuRegistry);
         return Result.success(StpUtil.getTokenValue());
+    }
+
+    @GetMapping("list")
+    public Result<Map<Long, String>> list() {
+        return Result.success(userService.list().stream().collect(Collectors.toMap(User::getId, User::getUsername)));
     }
 
     @PostMapping("login")
