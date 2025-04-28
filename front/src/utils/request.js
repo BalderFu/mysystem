@@ -2,9 +2,10 @@ import axios from "axios";
 import Constants from "@/utils/constants"
 import { Message } from "element-ui";
 import router from '@/router'; 
+import systemService from '@/services/systemService';
 
 const request = axios.create({
-    baseURL:"http://localhost:8090",
+    baseURL: systemService.getApiBaseUrl(),
     timeout:60000
 })
 

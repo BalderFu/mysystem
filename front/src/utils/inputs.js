@@ -211,19 +211,3 @@ export function getArithmeticHouseById(params) {
         params: params
     })
 }
-
-export function crackArithmetic(data) {
-    return create({
-        url: "/dict/crack",
-        method: "post",
-        data: data
-    })
-}
-
-export function hashList(params) {
-    return create({
-        url: "/hashArithmetic/list",
-        method: "get",
-        params: params
-    })
-}

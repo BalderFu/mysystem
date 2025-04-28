@@ -36,7 +36,7 @@
         style="width: 100%">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="username" label="用户名" width="120"></el-table-column>
-        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="email" label="邮箱" width="180"></el-table-column>
         <el-table-column prop="phone" label="手机号" width="120"></el-table-column>
         <el-table-column prop="role" label="角色" width="100">
           <template slot-scope="scope">

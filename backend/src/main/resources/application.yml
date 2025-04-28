@@ -4,19 +4,12 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/MyCryptography?useUnicode=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://localhost:3306/my_housekeeping_service?useUnicode=true&useSSL=false&characterEncoding=utf8&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
     username: root
     password: 123456
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: Asia/Shanghai
-  ai:
-    ollama:
-      base-url: http://192.168.0.128:11434
-      chat:
-        enabled: true
-        options:
-          model: deepseek-r1:1.5b
+    time-zone: GMT+8
   data:
     redis:
       # Redis数据库索引（默认为0）
@@ -39,12 +32,16 @@ spring:
           max-idle: 10
           # 连接池中的最小空闲连接
           min-idle: 0
+  servlet:
+    multipart:
+      max-file-size: 2MB
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       id-type: auto
+  mapper-locations: classpath*:/mappers/*.xml
 
 sa-token:
   token-name: authorization
@@ -55,3 +52,4 @@ sa-token:
   is-share: true
   token-style: tik
   is-log: false
+  is-print: off

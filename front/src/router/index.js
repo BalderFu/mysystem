@@ -16,21 +16,41 @@ const routes = [{
         component: () => import('@/views/dashboard/index'),
         meta: { title: '首页', icon: 'el-icon-s-home' }
     },{
-        path: 'algorithm',
-        name: 'Algorithm',
-        component: () => import('@/views/algorithm/index'),
-        meta: { title: '算法管理', icon: 'el-icon-s-platform' }
+        path: 'company',
+        name: 'Company',
+        component: () => import('@/views/company/index'),
+        meta: { title: '家政管理', icon: 'el-icon-s-platform' }
     },{
-        path: 'crack',
-        name: 'Crack',
-        component: () => import('@/views/crack/index'),
-        meta: { title: '算法破解', icon: 'el-icon-key' }
-    },{
-        path: 'library',
-        name: 'Library',
-        component: () => import('@/views/library/index'),
-        meta: { title: '算法库', icon: 'el-icon-collection' }
-    },{
+        path: 'serviceType',
+        name: 'ServiceType',
+        component: () => import('@/views/serviceType/index'),
+        meta: { title: '服务类型管理', icon: 'el-icon-key' }
+    },
+    {
+        path: 'project',
+        name: 'Project',
+        component: () => import('@/views/project/index'),
+        meta: { title: '家政服务', icon: 'el-icon-collection' }
+    },
+    {
+        path: 'preOrder',
+        name: 'PreOrder',
+        component: () => import('@/views/preOrder/index'),
+        meta: { title: '家政预订单', icon: 'el-icon-collection' }
+    },
+    {
+        path: 'tempo',
+        name: 'Tempo',
+        component: () => import('@/views/tempo/index'),
+        meta: { title: '服务进度管理', icon: 'el-icon-collection' }
+    },
+    {
+        path: 'comment',
+        name: 'Comment',
+        component: () => import('@/views/comment/index'),
+        meta: { title: '评论管理', icon: 'el-icon-collection' }
+    },
+    ,{
         path: 'personal',
         name: 'Personal',
         component: () => import('@/views/personal/index'),
@@ -49,10 +69,6 @@ const routes = [{
         name: 'Log',
         component: () => import('@/views/log/index'),
         meta: { title: '日志管理', icon: 'el-icon-document' }
-    },{
-        path: 'history',
-        name: 'History',
-        component: () => import('@/views/history/index'),
     }]
 }, {
     path: "/login",

@@ -1,0 +1,266 @@
+/* 时间选择器下拉菜单样式 */
+.time-select-dropdown,
+.el-select-dropdown {
+  z-index: 3000 !important;
+  background-color: #fff !important;
+  border: 1px solid #e4e7ed !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  
+  .el-select-dropdown__wrap {
+    max-height: 300px !important;
+  }
+  
+  .el-select-dropdown__item {
+    color: #606266;
+    font-size: 14px;
+    padding: 0 20px;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 34px;
+    line-height: 34px;
+    box-sizing: border-box;
+    cursor: pointer;
+    
+    &:hover, &.hover {
+      background-color: #f5f7fa;
+    }
+    
+    &.selected {
+      color: #409EFF;
+      font-weight: bold;
+    }
+    
+    &.is-disabled {
+      color: #c0c4cc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* 确保所有下拉菜单正确显示 */
+.el-select-dropdown {
+  z-index: 3000 !important;
+  background-color: #fff;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  
+  .el-scrollbar__wrap {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* 确保下拉菜单显示在最上层 */
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+  color: #409EFF;
+  background-color: #fff;
+  
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    border-width: 5px;
+    border-style: solid;
+    transform: translateY(-50%);
+  }
+}
+
+/* 修复Element UI组件在暗色背景上的样式问题 */
+.el-dialog,
+.el-form-item__label,
+.el-form-item__content {
+  color: #333;
+}
+
+/* 时间选择器下拉菜单样式 */
+.time-select-dropdown {
+  z-index: 3000 !important;
+  background-color: white !important;
+  border: 1px solid #e4e7ed !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1) !important;
+
+  .el-select-dropdown__item {
+    color: #606266 !important;
+    height: 34px !important;
+    line-height: 34px !important;
+    padding: 0 20px !important;
+    
+    &:hover {
+      background-color: #f5f7fa !important;
+    }
+    
+    &.selected {
+      color: #409EFF !important;
+      font-weight: bold !important;
+      background-color: #f0f7ff !important;
+    }
+    
+    &.is-disabled {
+      color: #c0c4cc !important;
+      cursor: not-allowed !important;
+    }
+  }
+}
+
+/* 确保Element UI下拉菜单在深色背景上正确显示 */
+.el-select-dropdown {
+  z-index: 3000 !important;
+}
+
+/* 确保下拉菜单内容可见 */
+.el-select-dropdown__list {
+  padding: 6px 0 !important;
+  max-height: 274px !important;
+  overflow-y: auto !important;
+}
+
+/* 确保下拉菜单箭头正确显示 */
+.el-popper .popper__arrow {
+  border-color: #e4e7ed !important;
+}
+
+/* 增强下拉框的交互性 */
+.el-select:hover .el-input__inner {
+  border-color: #c0c4cc !important;
+}
+
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #409EFF !important;
+}
+
+/* 修复在表单中的显示问题 */
+.el-form-item .time-select {
+  width: 100% !important;
+}
+
+/* 时间选择器下拉菜单样式 - 全局设置 */
+.el-select-dropdown.time-select-dropdown,
+.time-select-dropdown.el-select-dropdown {
+  z-index: 9999 !important;
+  background-color: white !important;
+  border: 1px solid #e4e7ed !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+}
+
+/* 确保下拉菜单背景颜色为白色 */
+.el-popper.time-select-dropdown {
+  background-color: white !important;
+}
+
+/* 下拉菜单选项样式 */
+.time-select-dropdown .el-select-dropdown__item {
+  color: #606266 !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  padding: 0 20px !important;
+  font-size: 14px !important;
+}
+
+/* 下拉菜单选项悬停样式 */
+.time-select-dropdown .el-select-dropdown__item:hover,
+.time-select-dropdown .el-select-dropdown__item.hover {
+  background-color: #f5f7fa !important;
+}
+
+/* 下拉菜单选中项样式 */
+.time-select-dropdown .el-select-dropdown__item.selected {
+  color: #409EFF !important;
+  font-weight: bold !important;
+  background-color: #f0f7ff !important;
+}
+
+/* 确保下拉菜单内容最大高度和滚动 */
+.time-select-dropdown .el-scrollbar__wrap {
+  max-height: 250px !important;
+  overflow-y: auto !important;
+}
+
+/* 确保下拉箭头正确显示 */
+.el-popper[x-placement^=bottom] .popper__arrow,
+.el-popper[x-placement^=top] .popper__arrow {
+  border-color: #e4e7ed !important;
+}
+
+/* 输入框样式 */
+.time-select .el-input__inner {
+  width: 100% !important;
+}
+
+/* 修复下拉菜单在弹窗中的显示问题 */
+.el-dialog__wrapper .time-select-dropdown {
+  z-index: 9999 !important;
+}
+
+/* 确保选择器组件宽度适应父容器 */
+.time-select {
+  width: 100%;
+}
+
+/* 时间选择器特殊样式，修复在对话框中显示和交互问题 */
+body .el-select-dropdown.time-select-dropdown {
+  background-color: white !important;
+  border: 1px solid #dcdfe6 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) !important;
+  z-index: 9999 !important; /* 确保显示在最上层 */
+}
+
+/* 修复时间选择器样式问题 */
+.el-dialog__wrapper {
+  .time-select-dropdown {
+    position: absolute !important;
+    z-index: 9999 !important;
+  }
+}
+
+/* 确保时间选择器下拉列表可见和可交互 */
+.el-dialog {
+  .el-select-dropdown.time-select-dropdown {
+    display: block !important;
+    transform-origin: center top !important;
+    z-index: 9999 !important;
+    
+    .el-select-dropdown__wrap {
+      max-height: 274px !important;
+    }
+    
+    .el-select-dropdown__list {
+      padding: 6px 0 !important;
+    }
+    
+    .el-select-dropdown__item {
+      height: 34px !important;
+      line-height: 34px !important;
+      padding: 0 20px !important;
+      font-size: 14px !important;
+      color: #606266 !important;
+      
+      &:hover, &.hover {
+        background-color: #f5f7fa !important;
+      }
+      
+      &.selected {
+        color: #409EFF !important;
+        font-weight: bold !important;
+        background-color: #f0f7ff !important;
+      }
+    }
+  }
+}
+
+/* 确保所有弹出层内容可见性 */
+.el-dialog, .el-message-box, .el-popover, .el-select-dropdown, .el-dropdown-menu {
+  &.is-multiple .el-select-dropdown__item.selected {
+    background-color: #f0f7ff;
+  }
+} 

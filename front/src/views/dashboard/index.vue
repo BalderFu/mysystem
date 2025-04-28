@@ -13,7 +13,7 @@
                   <i :class="item.icon"></i>
                 </div>
                 <div class="stat-info">
-                  <div class="stat-value">{{ item.value }}</div>
+                  <div class="stat-value">{{ item.value !== undefined ? item.value : '0' }}</div>
                   <div class="stat-title">{{ item.title }}</div>
                 </div>
               </div>
@@ -27,7 +27,7 @@
       <el-col :span="12">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span>算法使用统计</span>
+            <span>{{ algorithmChartTitle }}</span>
           </div>
           <div ref="algorithmChart" class="chart-container"></div>
         </el-card>
@@ -35,7 +35,7 @@
       <el-col :span="12">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <span>破解成功率</span>
+            <span>{{ successRateChartTitle }}</span>
           </div>
           <div ref="successRateChart" class="chart-container"></div>
         </el-card>
@@ -53,46 +53,25 @@
       </el-col>
     </el-row>
 
-    <!-- <el-row :gutter="20" style="margin-top: 20px;">
-      <el-col :span="12">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>算法管理</span>
-            <el-button style="float: right; padding: 3px 0" type="text" @click="goToAlgorithms">查看更多</el-button>
-          </div>
-          <el-table :data="tableData.slice(0, 5)" style="width: 100%" v-loading="tableLoading">
-            <el-table-column prop="name" label="算法名称" width="180"></el-table-column>
-            <el-table-column prop="description" label="算法描述" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="160"></el-table-column>
-          </el-table>
-        </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>最近日志</span>
-            <el-button style="float: right; padding: 3px 0" type="text" @click="goToLogs">查看更多</el-button>
-          </div>
-          <el-table :data="recentLogs" style="width: 100%" v-loading="logsLoading">
-            <el-table-column prop="username" label="用户" width="100"></el-table-column>
-            <el-table-column prop="url" label="操作路径" width="120"></el-table-column>
-            <el-table-column prop="createTime" label="时间" width="160"></el-table-column>
-          </el-table>
-        </el-card>
-      </el-col>
-    </el-row> -->
   </div>
 </template>
 
 <script>
 import * as echarts from 'echarts'
-import request from '@/utils/request'
-import { arithmeticPage, getArithmeticStats } from '@/api/arithmetic'
+import dashboardService from '@/services/dashboardService'
 
 export default {
   name: 'Dashboard',
   data() {
     return {
+      // 图表标题
+      algorithmChartTitle: dashboardService.getAlgorithmChartTitle(),
+      successRateChartTitle: dashboardService.getSuccessRateChartTitle(),
+      
+      // 图表标签
+      successLabel: dashboardService.getSuccessLabel(),
+      failLabel: dashboardService.getFailLabel(),
+      
       // 图表实例
       algorithmChart: null,
       successRateChart: null,
@@ -110,13 +89,13 @@ export default {
       // 数据概览卡片
       statisticsCards: [
         {
-          title: '算法总数',
+          title: '订单总数',
           value: 0,
           icon: 'el-icon-s-platform',
           bgColor: '#67C23A'
         },
         {
-          title: '破解任务',
+          title: '服务中数量',
           value: 0,
           icon: 'el-icon-key',
           bgColor: '#409EFF'
@@ -144,16 +123,23 @@ export default {
       }
     }
   },
+  created() {
+    console.log('Dashboard组件已创建')
+    // 设置默认值，确保页面加载时有显示
+    this.statisticsCards[0].value = 10
+    this.statisticsCards[1].value = 3
+    this.statisticsCards[2].value = 5
+    this.statisticsCards[3].value = 88
+  },
   mounted() {
+    console.log('Dashboard组件已挂载')
     // 初始化图表
     this.$nextTick(() => {
       this.initCharts()
     })
     
     // 获取数据
-    // this.fetchTableData()
-    this.fetchRecentLogs()
-    this.fetchStatisticsData()
+    this.fetchDashboardData()
   },
   beforeDestroy() {
     // 销毁图表实例
@@ -192,11 +178,8 @@ export default {
       // 添加窗口大小变化事件，自动调整图表大小
       window.addEventListener('resize', this.resizeCharts)
       
-      // 加载示例数据
+      // 加载示例数据（在真实数据加载前显示）
       this.loadDemoData()
-      
-      // 尝试获取真实数据
-      this.fetchChartData()
     },
     
     // 自适应调整图表大小
@@ -216,11 +199,7 @@ export default {
     loadDemoData() {
       // 算法使用统计数据
       const algorithmData = [
-        { name: 'MD5', value: 120 },
-        { name: 'SHA-1', value: 80 },
-        { name: 'SHA-256', value: 60 },
-        { name: 'DES', value: 40 },
-        { name: 'AES', value: 30 }
+        
       ]
       
       // 更新算法使用统计图表
@@ -241,7 +220,7 @@ export default {
         },
         series: [
           {
-            name: '算法使用',
+            name: '服务类型',
             type: 'pie',
             radius: ['50%', '70%'],
             avoidLabelOverlap: false,
@@ -272,11 +251,7 @@ export default {
       
       // 破解成功率数据
       const successRateData = [
-        { name: 'MD5', success: 75, fail: 25 },
-        { name: 'SHA-1', success: 60, fail: 40 },
-        { name: 'SHA-256', success: 42, fail: 58 },
-        { name: 'DES', success: 88, fail: 12 },
-        { name: 'AES', success: 35, fail: 65 }
+        
       ]
       
       // 更新破解成功率图表
@@ -289,7 +264,7 @@ export default {
           }
         },
         legend: {
-          data: ['成功', '失败'],
+          data: [this.successLabel, this.failLabel],
           textStyle: {
             color: '#fff',
             fontSize: 12,
@@ -343,7 +318,7 @@ export default {
         },
         series: [
           {
-            name: '成功',
+            name: this.successLabel,
             type: 'bar',
             stack: 'total',
             label: {
@@ -366,7 +341,7 @@ export default {
             }
           },
           {
-            name: '失败',
+            name: this.failLabel,
             type: 'bar',
             stack: 'total',
             label: {
@@ -511,50 +486,80 @@ export default {
           }
         ]
       })
-      
-      // 更新统计卡片数据
-      this.statisticsCards[0].value = 5  // 算法总数
-      this.statisticsCards[1].value = 168  // 破解任务
-      this.statisticsCards[2].value = 24  // 用户数量
-      this.statisticsCards[3].value = 82  // 今日访问量
     },
     
-    // 获取图表数据
-    async fetchChartData() {
+    // 获取所有Dashboard数据
+    async fetchDashboardData() {
       try {
         this.chartsLoading = true
+        this.logsLoading = true
         
-        // 尝试调用后端获取统计数据
-        try {
-          const response = await getArithmeticStats()
-          
-          if (response && response.code === 200 && response.data) {
-            // 处理算法使用统计
-            if (response.data.usageStats && Array.isArray(response.data.usageStats)) {
-              this.updateAlgorithmChart(response.data.usageStats)
-            }
-            
-            // 处理破解成功率
-            if (response.data.successRates && Array.isArray(response.data.successRates)) {
-              this.updateSuccessRateChart(response.data.successRates)
-            }
-            
-            // 处理访问量趋势
-            if (response.data.accessTrend && 
-                response.data.accessTrend.dates && 
-                response.data.accessTrend.counts) {
-              this.updateAccessTrendChart(
-                response.data.accessTrend.dates,
-                response.data.accessTrend.counts
-              )
-            }
-          }
-        } catch (error) {
-          console.warn('获取统计数据失败，使用模拟数据', error)
-          // 如果API不存在，继续使用模拟数据
+        // 并行获取所有数据
+        const [statisticsCards, statsData] = await Promise.all([
+          dashboardService.getStatisticsCards(),
+          dashboardService.getleaveTableData() 
+        ])
+        
+        // 更新统计卡片
+        if (statisticsCards && statisticsCards.length) {
+          this.statisticsCards = statisticsCards
+        } else {
+          console.warn('未获取到统计卡片数据或数据为空')
+          // 确保显示默认值或空状态
+          this.statisticsCards = this.statisticsCards.map(card => ({ ...card, value: 0 }))
         }
+        
+        // 处理统计数据
+        if (statsData) {
+          // 更新服务类型使用统计 (饼图)
+          if (statsData.usageStats && statsData.usageStats.length) {
+            this.updateAlgorithmChart(statsData.usageStats)
+          } else {
+            // 如果没有数据，可以显示空状态或默认示例
+            console.warn('未获取到服务类型使用统计数据')
+            this.updateAlgorithmChart([]) // 传递空数组以清空图表
+          }
+          
+          // 更新订单完成率 (堆叠条形图)
+          if (statsData.successRates && statsData.successRates.length) {
+             // 注意：API返回的success/fail是数量，需要转换为百分比
+             const processedSuccessRates = statsData.successRates.map(item => {
+                const total = item.success + item.fail;
+                const successPercentage = total > 0 ? Math.round((item.success / total) * 100) : 0;
+                const failPercentage = 100 - successPercentage;
+                return {
+                  name: item.name,
+                  success: successPercentage,
+                  fail: failPercentage
+                }
+             });
+             this.updateSuccessRateChart(processedSuccessRates)
+          } else {
+            console.warn('未获取到订单完成率数据')
+            this.updateSuccessRateChart([]) // 清空图表
+          }
+          
+          // 更新访问量趋势 (折线图)
+          if (statsData.accessTrend && statsData.accessTrend.dates && statsData.accessTrend.counts) {
+            this.updateAccessTrendChart(statsData.accessTrend.dates, statsData.accessTrend.counts)
+          } else {
+             console.warn('未获取到访问量趋势数据')
+             this.updateAccessTrendChart([], []) // 清空图表
+          }
+          
+        } else {
+          console.warn('未获取到统计图表数据')
+          // 获取数据失败时，清空所有图表或显示默认示例
+          this.loadDemoData() // 或清空: this.updateAlgorithmChart([]), etc.
+        }
+      } catch (error) {
+        console.error('获取Dashboard数据失败:', error)
+        // 出错时显示默认数据或空状态
+        this.statisticsCards = this.statisticsCards.map(card => ({ ...card, value: 0 }))
+        this.loadDemoData()
       } finally {
         this.chartsLoading = false
+        this.logsLoading = false
       }
     },
     
@@ -574,21 +579,27 @@ export default {
     
     // 更新破解成功率图表
     updateSuccessRateChart(data) {
-      if (!this.successRateChart || !data || !data.length) return
-      
-      this.successRateChart.setOption({
-        yAxis: {
-          data: data.map(item => item.name)
-        },
+      if (!this.successRateChart) return;
+      // 更新图表配置以处理空数据
+      const options = {
+        backgroundColor: 'transparent',
+        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        legend: { data: [this.successLabel, this.failLabel], textStyle: { color: '#fff', fontSize: 12, fontWeight: 'bold' } },
+        grid: { left: '5%', right: '5%', bottom: '5%', containLabel: true },
+        xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%', color: '#fff', fontSize: 12, fontWeight: 'bold' }, axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.5)', width: 2 } }, splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.2)', type: 'dashed', width: 1 } } },
+        yAxis: { type: 'category', data: data.map(item => item.name), axisLabel: { color: '#fff', fontSize: 12, fontWeight: 'bold', margin: 16 }, axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.5)', width: 2 } } },
         series: [
-          {
-            data: data.map(item => item.success)
-          },
-          {
-            data: data.map(item => item.fail)
-          }
+          { name: this.successLabel, type: 'bar', stack: 'total', label: { show: true, formatter: '{c}%', color: '#fff', fontSize: 14, fontWeight: 'bold', textShadowColor: 'rgba(0, 0, 0, 0.3)', textShadowBlur: 3, textShadowOffsetX: 1, textShadowOffsetY: 1 }, emphasis: { focus: 'series' }, data: data.map(item => item.success), itemStyle: { color: '#67C23A' } },
+          { name: this.failLabel, type: 'bar', stack: 'total', label: { show: true, formatter: '{c}%', color: '#fff', fontSize: 14, fontWeight: 'bold', textShadowColor: 'rgba(0, 0, 0, 0.3)', textShadowBlur: 3, textShadowOffsetX: 1, textShadowOffsetY: 1 }, emphasis: { focus: 'series' }, data: data.map(item => item.fail), itemStyle: { color: '#F56C6C' } }
         ]
-      })
+      };
+      // 如果没有数据，显示空提示或默认配置
+      if (!data || data.length === 0) {
+        options.yAxis.data = []; // 清空y轴
+        options.series.forEach(s => s.data = []); // 清空系列数据
+        // 可以添加一个空状态提示，例如 title.text = '暂无数据'
+      }
+      this.successRateChart.setOption(options);
     },
     
     // 更新访问量趋势图表
@@ -604,62 +615,6 @@ export default {
         }]
       })
     },
-
-    
-    // 获取最近日志
-    async fetchRecentLogs() {
-      try {
-        this.logsLoading = true
-        const response = await request({
-          url: '/log',
-          method: 'get',
-          params: {
-            pageNo: 1,
-            pageSize: 5
-          }
-        })
-        
-        if (response.code === 200) {
-          this.recentLogs = response.data.records || []
-        }
-      } catch (error) {
-        console.error('获取日志列表失败:', error)
-      } finally {
-        this.logsLoading = false
-      }
-    },
-    
-    // 获取统计数据
-    async fetchStatisticsData() {
-      try {
-        // 尝试获取真实的统计数据
-        const response = await request({
-          url: '/arithmetic/dashboard',
-          method: 'get'
-        }).catch(() => null)
-        
-        if (response && response.code === 200 && response.data) {
-          // 更新统计卡片
-          if (response.data.algorithmCount !== undefined) {
-            this.statisticsCards[0].value = response.data.algorithmCount
-          }
-          
-          if (response.data.crackTaskCount !== undefined) {
-            this.statisticsCards[1].value = response.data.crackTaskCount
-          }
-          
-          if (response.data.userCount !== undefined) {
-            this.statisticsCards[2].value = response.data.userCount
-          }
-          
-          if (response.data.todayVisits !== undefined) {
-            this.statisticsCards[3].value = response.data.todayVisits
-          }
-        }
-      } catch (error) {
-        console.error('获取统计数据失败:', error)
-      }
-    },
     
     // 跳转到算法管理页面
     goToAlgorithms() {
@@ -669,6 +624,15 @@ export default {
     // 跳转到日志管理页面
     goToLogs() {
       this.$router.push('/log')
+    }
+  },
+  watch: {
+    // 监听统计卡片数据变化
+    statisticsCards: {
+      handler(newVal) {
+        console.log('统计卡片数据已更新:', JSON.stringify(newVal, null, 2))
+      },
+      deep: true
     }
   }
 }

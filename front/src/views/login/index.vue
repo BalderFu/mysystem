@@ -3,7 +3,7 @@
     <div class="login-box">
       <div class="login-header">
         <img src="@/assets/logo.png" alt="Logo" class="logo">
-        <h1 class="title">文案生成系统</h1>
+        <h1 class="title">{{ systemName }}</h1>
       </div>
 
       <!-- 登录表单 -->
@@ -217,11 +217,31 @@
 import { validUsername } from '@/utils/validate'
 import Constants from "@/utils/constants";
 import Cookies from 'js-cookie';
-import { login, loginWithPhone, registry, sendValidateCode } from "@/utils/inputs"
+import { login, loginWithPhone, registry, sendValidateCode, userInfo } from "@/utils/inputs";
+import systemService from '@/services/systemService';
 
 export default {
   name: 'Login',
   data() {
+    // 密码验证规则
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('密码不能少于6位'));
+      } else {
+        callback();
+      }
+    };
+    
+    // 邮箱验证规则
+    const validateEmail = (rule, value, callback) => {
+      const emailReg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (!emailReg.test(value)) {
+        callback(new Error('请输入正确的邮箱格式'));
+      } else {
+        callback();
+      }
+    };
+    
     // 手机号验证规则
     const validatePhone = (rule, value, callback) => {
       if (!value) {
@@ -243,10 +263,13 @@ export default {
       codeBtnDisabled: false,
       codeTimer: null,
       
+      // 系统名称
+      systemName: systemService.getSystemName(),
+      
       // 登录表单
       loginForm: {
-        username: 'admin',
-        password: '123456',
+        username: '',
+        password: '',
         phone: '',
         code: ''
       },
@@ -365,14 +388,28 @@ export default {
             // 登录成功
             this.loading = false;
             console.log("登录成功", response);
-            
-            // 保存token和用户信息到localStorage
             if (response.data) {
               Cookies.set(Constants.ID.USER_TOKEN_KEY, response.data);
               localStorage.setItem(Constants.ID.USER_TOKEN_KEY, response.data);
-              // 存储完整的响应对象，包括data字段中的用户信息
               localStorage.setItem(Constants.ID.USER_KEY, JSON.stringify(response));
-              this.$router.push({ path: '/dashboard' });
+
+
+              userInfo().then(resp => {
+                console.log("用户信息", resp);
+                const userRole = resp.data.role;
+                const accessibleMenus = systemService.getMenus(userRole);
+                let firstAccessiblePath = '/dashboard'; // 默认路径
+                if (accessibleMenus && accessibleMenus.length > 0) {
+                  const firstMenu = accessibleMenus[0];
+                  if (firstMenu.children && firstMenu.children.length > 0) {
+                    firstAccessiblePath = firstMenu.children[0].path;
+                  } else {
+                    firstAccessiblePath = firstMenu.path;
+                  }
+                }
+                this.$router.push({ path: firstAccessiblePath });
+              })
+
             } else {
               this.$message.error('登录响应缺少用户信息');
             }

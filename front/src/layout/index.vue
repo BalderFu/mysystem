@@ -4,7 +4,7 @@
       <el-aside width="210px" class="sidebar-container">
         <div class="logo-container">
           <img src="@/assets/logo.png" alt="Logo" class="logo">
-          <span class="title">哈希破解系统</span>
+          <span class="title">{{ systemName }}</span>
         </div>
         <el-scrollbar wrap-class="scrollbar-wrapper">
           <el-menu
@@ -16,38 +16,42 @@
             @select="handleSelect"
             router
           >
-            <el-menu-item index="/dashboard" class="menu-item">
-              <i class="el-icon-s-home"></i>
-              <span slot="title">首页</span>
-            </el-menu-item>
-            
-            <el-menu-item index="/algorithm" class="menu-item">
-              <i class="el-icon-s-platform"></i>
-              <span slot="title">算法管理</span>
-            </el-menu-item>
-            
-            <el-menu-item index="/crack" class="menu-item">
-              <i class="el-icon-key"></i>
-              <span slot="title">算法破解</span>
-            </el-menu-item>
-
-            <el-menu-item index="/library" class="menu-item">
-              <i class="el-icon-collection"></i>
-              <span slot="title">算法资料库</span>
-            </el-menu-item>
-            
-            <el-menu-item v-if="isAdmin" index="/user" class="menu-item">
-              <i class="el-icon-user"></i>
-              <span slot="title">用户管理</span>
-            </el-menu-item>
-
-            <el-menu-item index="/log" class="menu-item">
-              <i class="el-icon-document"></i>
-              <span slot="title">日志管理</span>
-            </el-menu-item>
-            
-            
-            
+            <!-- 渲染无子菜单的菜单项 -->
+            <template v-for="(menu, index) in filteredMenus">
+              <!-- 没有子菜单的菜单项 -->
+              <el-menu-item 
+                v-if="!menu.children || !menu.children.length" 
+                :key="menu.path" 
+                :index="menu.path" 
+                class="menu-item"
+              >
+                <i :class="menu.icon"></i>
+                <span slot="title">{{ menu.title }}</span>
+              </el-menu-item>
+              
+              <!-- 有子菜单的菜单项 -->
+              <el-submenu 
+                v-else 
+                :key="menu.path" 
+                :index="menu.path"
+              >
+                <template slot="title">
+                  <i :class="menu.icon"></i>
+                  <span>{{ menu.title }}</span>
+                </template>
+                
+                <!-- 渲染子菜单项 -->
+                <el-menu-item 
+                  v-for="child in menu.children" 
+                  :key="child.path" 
+                  :index="child.path"
+                  class="sub-menu-item"
+                >
+                  <i :class="child.icon"></i>
+                  <span>{{ child.title }}</span>
+                </el-menu-item>
+              </el-submenu>
+            </template>
           </el-menu>
           
         </el-scrollbar>
@@ -102,6 +106,7 @@ import Cookies from "js-cookie";
 import Constants from "@/utils/constants";
 import { getChatSessions } from "@/utils/inputs";
 import Vue from 'vue';
+import systemService from '@/services/systemService';
 
 export default {
   name: "Layout",
@@ -116,10 +121,25 @@ export default {
       sessionData: [],
       sessionsLoading: false,
       isNewSessionActive: false,
-      isAdmin: false
+      isAdmin: false,
+      // 系统名称
+      systemName: systemService.getSystemName(),
+      // 系统菜单
+      menus: systemService.getMenus()
     }
   },
   computed: {
+    // 过滤菜单，根据用户权限
+    filteredMenus() {
+      if (this.isAdmin) {
+        return this.menus;
+      } else {
+        // 如果不是管理员，只显示普通用户可以看到的菜单
+        return this.menus.filter(menu => {
+          return !menu.roles || menu.roles.includes('普通用户');
+        });
+      }
+    },
     activeMenu() {
       if (this.$route.path.startsWith('/history')) {
         return '';
@@ -128,24 +148,56 @@ export default {
     },
     currentPageTitle() {
       const path = this.$route.path;
-      const routeMap = {
-        '/': '首页',
-        '/dashboard': '首页',
-        '/algorithm': '算法管理',
-        '/crack': '算法破解',
-        '/library': '算法库',
-        '/user': '用户管理',
-        '/log': '日志管理',
-        '/personal': '个人中心'
-      };
       
-      return routeMap[path] || '哈希破解系统';
+      // 先从主菜单中查找当前路径对应的标题
+      const currentMenu = this.menus.find(menu => menu.path === path);
+      if (currentMenu) {
+        return currentMenu.title;
+      }
+      
+      // 如果在主菜单中没找到，尝试在子菜单中查找
+      for (const menu of this.menus) {
+        if (menu.children && menu.children.length) {
+          const childMenu = menu.children.find(child => child.path === path);
+          if (childMenu) {
+            return childMenu.title;
+          }
+        }
+      }
+      
+      // 如果没有找到匹配的菜单，使用系统名称
+      return this.systemName;
     },
     isViewingNewChat() {
       return this.$route.path === '/history' && !this.$route.query.id;
     }
   },
   methods: {
+    init() {
+      // 设置计时器更新时间
+      this.updateTime();
+      this.timer = setInterval(this.updateTime, 1000);
+      
+      // 获取用户信息
+      const user = localStorage.getItem(Constants.ID.USER_KEY);
+      if (user) {
+        try {
+          const userInfo = JSON.parse(user);
+          this.userName = userInfo.data.username || '未知用户';
+          // 使用systemService获取用户头像URL
+          this.avatarUrl = userInfo.data.avatar 
+            ? systemService.getUserAvatarUrl(userInfo.data.avatar)
+            : systemService.getDefaultAvatar();
+        } catch (error) {
+          console.error('解析用户信息失败:', error);
+          this.userName = '未知用户';
+          this.avatarUrl = systemService.getDefaultAvatar();
+        }
+      } else {
+        // 如果没有用户信息，使用systemService获取默认头像
+        this.avatarUrl = systemService.getDefaultAvatar();
+      }
+    },
     checkAdminRole() {
       const user = localStorage.getItem(Constants.ID.USER_KEY);
       if (user) {
@@ -376,17 +428,11 @@ export default {
   created() {
     this.$eventBus.$on('refresh-sessions', this.fetchChatSessionsForMenu);
     this.checkAdminRole();
+    this.init();
   },
   mounted() {
-    const user = localStorage.getItem(Constants.ID.USER_KEY);
-    if (user) {
-      const userInfo = JSON.parse(user);
-      this.avatarUrl = `${this.baseUrl}/upload/${userInfo.avatar}?t=${new Date().getTime()}`;
-      this.userName = userInfo.username || '用户';
-    }
-    
-    this.updateTime();
-    this.timer = setInterval(this.updateTime, 1000);
+    // 组件挂载后检查用户角色
+    this.checkAdminRole();
   },
   beforeDestroy() {
     if (this.timer) {
@@ -826,6 +872,95 @@ export default {
         opacity: 1;
       }
     }
+  }
+}
+</style>
+
+<style scoped>
+.dashboard-container {
+  padding: 20px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 350px;
+}
+
+.box-card {
+  margin-bottom: 20px;
+  background-color: var(--background-card);
+  border: 1px solid var(--border-color);
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  font-size: 56px;
+  margin-right: 20px;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.stat-title {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* 菜单样式 */
+.el-menu-vertical {
+  border-right: none;
+}
+
+.menu-item {
+  height: 50px;
+  line-height: 50px;
+}
+
+.sub-menu-item {
+  padding-left: 20px !important;
+}
+
+.el-submenu__title {
+  height: 50px;
+  line-height: 50px;
+}
+
+.el-submenu .el-menu-item {
+  min-width: 0;
+  background-color: var(--menu-sub-background, #1f2d3d);
+}
+
+.el-submenu .el-menu-item:hover,
+.el-submenu .el-menu-item.is-active {
+  background-color: var(--menu-sub-active-background, #000c17);
+}
+
+/* 响应式调整 */
+@media (max-width: 992px) {
+  .chart-container {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    height: 250px;
   }
 }
 </style>

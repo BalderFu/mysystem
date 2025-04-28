@@ -1,17 +1,5 @@
 import request from '@/utils/request'
 
-/**
- * 分页获取算法列表
- * @param {Object} params - 分页参数: {current: 当前页码, size: 每页条数, name: 算法名称(可选)}
- * @returns {Promise} - 请求结果
- */
-// export function arithmeticPage(params) {
-//   return request({
-//     url: '/arithmetic/page',
-//     method: 'get',
-//     params
-//   })
-// }
 
 /**
  * 根据ID获取算法详情
@@ -71,7 +59,7 @@ export function deleteArithmetic(params) {
  */
 export function getArithmeticStats() {
   return request({
-    url: '/arithmetic/stats',
+    url: '/statistic/stats',
     method: 'get'
   })
 } 
