@@ -1,22 +1,20 @@
 package com.myhousekeepingservice.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.myhousekeepingservice.entity.User;
-import com.myhousekeepingservice.model.*;
+import com.myhousekeepingservice.model.base.*;
 import com.myhousekeepingservice.service.UserService;
 import com.myhousekeepingservice.service.ValidateCodeService;
+import com.myhousekeepingservice.utils.UserUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +24,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private static final String PATH = System.getProperty("user.dir") + "/src/main/resources" + File.separator + "upload";
     @Autowired
     private UserService userService;
     @Autowired
@@ -51,7 +48,9 @@ public class UserController {
 
     @GetMapping("/pager")
     public Result<Page<User>> pager(@RequestParam("pageNo") Integer pageNo, @RequestParam("pageSize") Integer pageSize, @RequestParam("username") String username) {
-        return Result.success(userService.getBaseMapper().selectPage(new Page<User>(pageNo, pageSize), new LambdaQueryWrapper<User>().eq(StrUtil.isNotBlank(username), User::getUsername, username).eq(User::getRole, "normal")));
+        User user = userService.getById(StpUtil.getLoginIdAsLong());
+        List<String> userRoles = UserUtils.getUserRoles(user);
+        return Result.success(userService.getBaseMapper().selectPage(new Page<User>(pageNo, pageSize), new LambdaQueryWrapper<User>().eq(StrUtil.isNotBlank(username), User::getUsername, username).in(User::getRole, userRoles)));
     }
 
     @PostMapping("loginWithPhone")
@@ -78,10 +77,12 @@ public class UserController {
 
     @PutMapping("/update")
     public Result<Void> updateUserInfo(@Validated @RequestBody User user) {
-        Long loginId = Long.valueOf((String) StpUtil.getLoginId());
-        User u = userService.getById(loginId);
-        if (!u.getRole().equals("admin")) {
-            throw new RuntimeException("只有管理员能修改");
+        Long loginId = StpUtil.getLoginIdAsLong();
+        if (!loginId.equals(user.getId())) {
+            User u = userService.getById(loginId);
+            if (!u.getRole().equals("admin")) {
+                throw new RuntimeException("只有管理员能修改");
+            }
         }
         userService.updateById(user);
         return Result.success();
@@ -117,13 +118,13 @@ public class UserController {
         return Result.success();
     }
 
-    @PostMapping("/delete")
-    public Result<Void> delete(@RequestBody DeleteUsers deleteUsers) {
-        List<Long> userIds = deleteUsers.getUserIds();
-        userIds.remove(StpUtil.getLoginIdAsLong());
-        userService.removeByIds(userIds);
-        return Result.success();
-    }
+//    @PostMapping("/delete")
+//    public Result<Void> delete(@RequestBody DeleteUsers deleteUsers) {
+//        List<Long> userIds = deleteUsers.getUserIds();
+//        userIds.remove(StpUtil.getLoginIdAsLong());
+//        userService.removeByIds(userIds);
+//        return Result.success();
+//    }
 
 
     @PutMapping("/resetPws")
@@ -136,27 +137,5 @@ public class UserController {
     public Result<Void> logout() {
         StpUtil.logout();
         return Result.success();
-    }
-
-    @PostMapping("/upload")
-    public Result<String> sensitive(@RequestParam("file") MultipartFile file) {
-        File uploadFolder = new File(PATH);
-        if (!uploadFolder.exists()) {
-            uploadFolder.mkdirs();
-        }
-        String fileName = file.getOriginalFilename();
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-        if (!extension.equalsIgnoreCase("png") && !extension.equalsIgnoreCase("jpg") && !extension.equalsIgnoreCase("jpeg")) {
-            throw new RuntimeException("只允许上传 [png、jpg、jpeg] 文件！");
-        }
-        fileName = IdUtil.fastSimpleUUID() + "." + extension;
-        File dest = new File(uploadFolder, fileName);
-        try {
-            file.transferTo(dest);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("文件上传出错");
-        }
-        return Result.success(fileName);
     }
 }

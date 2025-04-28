@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.myhousekeepingservice.entity.User;
 import com.myhousekeepingservice.mapper.UserMapper;
-import com.myhousekeepingservice.model.ResetPwsReq;
-import com.myhousekeepingservice.model.UserRegistry;
+import com.myhousekeepingservice.model.base.ResetPwsReq;
+import com.myhousekeepingservice.model.base.UserRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

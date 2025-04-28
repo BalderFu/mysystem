@@ -1,6 +1,6 @@
 package com.myhousekeepingservice.controller;
 
-import com.myhousekeepingservice.model.Result;
+import com.myhousekeepingservice.model.base.Result;
 import com.myhousekeepingservice.model.base.StatsResp;
 import com.myhousekeepingservice.model.base.TotalCountResp;
 import com.myhousekeepingservice.service.StatisticService;

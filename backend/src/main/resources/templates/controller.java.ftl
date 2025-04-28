@@ -1,7 +1,7 @@
 package ${package.Controller};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.myhousekeepingservice.model.Result;
+import com.myhousekeepingservice.model.base.Result;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;

@@ -33,6 +33,8 @@ public class CodeGenerator {
                                     return DbColumnType.BOOLEAN;
                                 } else if (fieldType.toLowerCase().contains("bigint")) {
                                     return DbColumnType.LONG;
+                                } else if (fieldType.toLowerCase().contains("decimal")) {
+                                    return DbColumnType.BIG_DECIMAL;
                                 }
                                 return super.processTypeConvert(config, fieldType);
                             }

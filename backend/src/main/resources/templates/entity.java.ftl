@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -15,11 +16,8 @@ import java.time.LocalDateTime;
 
 /**
 * <p>
-    * ${table.comment!""}
-    * </p>
-*
-* @author ${author}
-* @since ${date}
+*   ${table.comment!""}
+* </p>
 */
 @Data
 @TableName("`${table.name}`")
@@ -30,15 +28,23 @@ private static final long serialVersionUID = 1L;
 
 <#list table.fields as field>
     <#if field.keyFlag>
-    @TableId(type = IdType.AUTO)
-    private ${field.propertyType} ${field.propertyName};
+        @TableId(type = IdType.AUTO)
+        private ${field.propertyType} ${field.propertyName};
 
     <#else>
         <#if field.comment??>
-    @ApiModelProperty("${field.comment}")
+            @ApiModelProperty("${field.comment}")
         </#if>
-    @TableField("`${field.name}`")
-    private ${field.propertyType} ${field.propertyName};
+
+        <#if field.propertyType == "LocalDateTime">
+            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        </#if>
+        <#if field.propertyType == "Date">
+            @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+        </#if>
+
+        @TableField("`${field.name}`")
+        private ${field.propertyType} ${field.propertyName};
 
     </#if>
 </#list>

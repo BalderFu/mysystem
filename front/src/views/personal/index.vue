@@ -138,8 +138,10 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 import Constants from "@/utils/constants";
-import { updateUserInfo, uploadPic, resetPassword } from "@/utils/inputs";
+import { updateUserInfo, uploadPic, resetPassword } from "@/api/user";
+import EventBus from "@/utils/eventBus";
 
 export default {
   name: "Personal",
@@ -160,7 +162,8 @@ export default {
         nickname: "",
         phone: "",
         email: "",
-        avatar: ""
+        avatar: "",
+        id: null
       },
       originalUserInfo: null,
       hasChanges: false,
@@ -237,35 +240,27 @@ export default {
         let userInfo;
         try {
           userInfo = JSON.parse(user);
-          console.log("从localStorage获取的用户信息:", userInfo);
-          
-          // 检查userInfo是否有data字段，这表明存储的是完整的响应对象
           if (userInfo.data) {
             userInfo = userInfo.data;
           }
-          
-          // 将用户信息赋值给组件
           this.userInfo = {
             username: userInfo.username || "",
             nickname: userInfo.nickname || "",
             phone: userInfo.phone || "",
             email: userInfo.email || "",
-            avatar: userInfo.avatar || ""
+            avatar: userInfo.avatar || "",
+            id: userInfo.id || null
           };
           
-          // 保存原始数据用于比较是否有修改
           this.originalUserInfo = { ...this.userInfo };
           this.hasChanges = false;
           
-          // 设置头像URL
           if (this.userInfo.avatar) {
-            this.avatarUrl = `${this.baseUrl}/upload/${this.userInfo.avatar}?t=${new Date().getTime()}`;
+            this.avatarUrl = `${this.baseUrl}/uploads/${this.userInfo.avatar}?t=${new Date().getTime()}`;
           } else {
-            // 使用Element UI的用户图标作为默认头像
             this.avatarUrl = '';
           }
         } catch (error) {
-          console.error("解析用户信息时出错:", error);
           this.$message.error("获取用户信息失败，请重新登录");
         }
       }
@@ -286,41 +281,47 @@ export default {
     
     // 保存修改
     saveChanges() {
-      // 调用API将修改保存到后端
-      // const loading = this.$loading({
-      //   lock: true,
-      //   text: '保存中...',
-      //   spinner: 'el-icon-loading',
-      //   background: 'rgba(0, 0, 0, 0.7)'
-      // });
-      
-      // 创建一个不包含avatar字段的用户信息对象
       const userInfoToSave = {
         username: this.userInfo.username,
         nickname: this.userInfo.nickname,
         phone: this.userInfo.phone,
-        email: this.userInfo.email
+        email: this.userInfo.email,
+        avatar: this.userInfo.avatar,
+        id: this.userInfo.id
       };
       
       updateUserInfo(userInfoToSave).then(response => {
         // loading.close();
-        this.$message({
-          message: '内容生成修改成功',
-          type: 'success'
-        })
-        
-        // 更新本地存储
-        const user = JSON.parse(localStorage.getItem(Constants.ID.USER_KEY) || "{}");
-        Object.assign(user, this.userInfo);
-        localStorage.setItem(Constants.ID.USER_KEY, JSON.stringify(user));
-        
-        // 更新原始数据
-        this.originalUserInfo = { ...this.userInfo };
-        this.hasChanges = false;
-        
-        // 重置编辑状态
-        for (const key in this.editingFields) {
-          this.$set(this.editingFields, key, false);
+        if (response.code === 200) {
+          this.$message({
+            message: '用户信息保存成功',
+            type: 'success'
+          })
+
+          // 更新本地存储
+          const user = JSON.parse(localStorage.getItem(Constants.ID.USER_KEY) || "{}");
+          Object.assign(user, this.userInfo);
+          localStorage.setItem(Constants.ID.USER_KEY, JSON.stringify(user));
+
+          // 触发头像更新事件
+          if (this.userInfo.avatar) {
+            const avatarUrl = `${this.baseUrl}/uploads/${this.userInfo.avatar}?t=${new Date().getTime()}`;
+            EventBus.$emit('avatar-updated', avatarUrl);
+          }
+
+          // 更新原始数据
+          this.originalUserInfo = {...this.userInfo};
+          this.hasChanges = false;
+
+          // 重置编辑状态
+          for (const key in this.editingFields) {
+            this.$set(this.editingFields, key, false);
+          }
+        }else {
+          this.$message({
+            message:  response.message | '用户信息保存失败',
+            type: 'error'
+          })
         }
       }).catch(error => {
         loading.close(); // 确保在错误时关闭loading
@@ -356,12 +357,12 @@ export default {
           
           uploadPic(formData).then(response => {
             loading.close();
-            
-            // 假设后端返回的数据中包含了上传后的文件名
-            if (response && response.filename) {
+            console.log("----",response)
+
+            if (response && response.code ===200 && response.data) {
               // 更新用户信息中的头像
-              this.userInfo.avatar = response.filename;
-              this.avatarUrl = `${this.baseUrl}/upload/${response.filename}?t=${new Date().getTime()}`;
+              this.userInfo.avatar = response.data;
+              this.avatarUrl = `${this.baseUrl}/uploads/${response.data}?t=${new Date().getTime()}`;
               this.checkChanges(); // 检测变化
               
               // 提示上传成功

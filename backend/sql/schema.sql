@@ -1,4 +1,4 @@
-create database `my_housekeeping_service` default character set 'utf8mb4';
+use `my_housekeeping_service`;
 
 CREATE TABLE `my_housekeeping_service`.`user`
 (

@@ -1,7 +1,7 @@
 package com.myhousekeepingservice.configs;
 
 import cn.dev33.satoken.exception.NotLoginException;
-import com.myhousekeepingservice.model.Result;
+import com.myhousekeepingservice.model.base.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

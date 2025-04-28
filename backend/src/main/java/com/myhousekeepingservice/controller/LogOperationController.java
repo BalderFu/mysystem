@@ -2,7 +2,7 @@ package com.myhousekeepingservice.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.myhousekeepingservice.entity.LogOperation;
-import com.myhousekeepingservice.model.Result;
+import com.myhousekeepingservice.model.base.Result;
 import com.myhousekeepingservice.service.LogOperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

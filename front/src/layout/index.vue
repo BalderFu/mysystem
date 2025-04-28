@@ -107,6 +107,7 @@ import Constants from "@/utils/constants";
 import { getChatSessions } from "@/utils/inputs";
 import Vue from 'vue';
 import systemService from '@/services/systemService';
+import EventBus from '@/utils/eventBus';
 
 export default {
   name: "Layout",
@@ -394,6 +395,25 @@ export default {
     handleNewSessionClick() {
       console.log("点击了新会话菜单项");
       this.createNewSession();
+    },
+
+    updateAvatar(avatarUrl) {
+      if (avatarUrl) {
+        this.avatarUrl = avatarUrl;
+      } else {
+        // 如果没有提供头像URL，则从本地存储中获取
+        const user = localStorage.getItem(Constants.ID.USER_KEY);
+        if (user) {
+          try {
+            const userInfo = JSON.parse(user);
+            if (userInfo.data && userInfo.data.avatar) {
+              this.avatarUrl = systemService.getUserAvatarUrl(userInfo.data.avatar);
+            }
+          } catch (error) {
+            console.error('解析用户信息失败:', error);
+          }
+        }
+      }
     }
   },
   watch: {
@@ -431,10 +451,16 @@ export default {
     this.init();
   },
   mounted() {
-    // 组件挂载后检查用户角色
-    this.checkAdminRole();
+    this.init();
+    
+    // 监听头像更新事件
+    EventBus.$on('avatar-updated', this.updateAvatar);
   },
   beforeDestroy() {
+    // 清除事件监听
+    EventBus.$off('avatar-updated', this.updateAvatar);
+    
+    // 清除时间计时器
     if (this.timer) {
       clearInterval(this.timer);
     }

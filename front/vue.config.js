@@ -7,7 +7,7 @@ module.exports = defineConfig({
     config
       .plugin('html')
       .tap(args => {
-        args[0].title = '文案生成系统'
+        args[0].title = '我的系统'
         return args
       })
   }

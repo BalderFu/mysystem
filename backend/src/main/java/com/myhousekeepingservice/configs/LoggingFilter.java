@@ -2,6 +2,7 @@ package com.myhousekeepingservice.configs;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.ContentType;
 import com.myhousekeepingservice.entity.LogOperation;
 import com.myhousekeepingservice.entity.User;
 import com.myhousekeepingservice.service.LogOperationService;
@@ -66,6 +67,12 @@ public class LoggingFilter implements Filter {
 
     private String getRequestBody(ContentCachingRequestWrapper request) {
         byte[] buf = request.getContentAsByteArray();
+        if (StrUtil.isBlank(request.getContentType())) {
+            return request.getQueryString();
+        }
+        if (request.getContentType().toLowerCase().startsWith(ContentType.MULTIPART.getValue())) {
+            return "文件上传附件[二进制文件]";
+        }
         if (buf.length > 0) {
             return new String(buf, StandardCharsets.UTF_8);
         }

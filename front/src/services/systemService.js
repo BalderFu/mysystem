@@ -9,7 +9,7 @@ const systemService = {
    */
   systemInfo: {
     // 系统名称
-    name: '雨山家政管理系统',
+    name: '脚手架管理系统',
     // 系统版本
     version: '1.0.0',
     // 系统logo (如果有)
@@ -22,7 +22,7 @@ const systemService = {
     defaultAvatar: require('@/assets/111.jpg'),
     // 用户头像路径格式，用于拼接用户头像URL
     // 使用 {baseUrl} 表示API基础地址，{avatar} 表示用户头像路径，{timestamp} 表示时间戳
-    userAvatarFormat: '{baseUrl}/upload/{avatar}?t={timestamp}'
+    userAvatarFormat: '{baseUrl}/uploads/{avatar}?t={timestamp}'
   },
 
   /**
@@ -41,47 +41,12 @@ const systemService = {
       icon: 'el-icon-s-home',
       roles: ['管理员']
     },
-    {
-      title: '家政管理',
-      path: '/company',
-      icon: 'el-icon-s-management',
-      roles: ['管理员', '普通用户']
-    },
-    {
-      title: '服务类型管理',
-      path: '/serviceType',
-      icon: 'el-icon-s-grid',
-      roles: ['管理员', '普通用户']
-    },
-    {
-      title: '家政服务',
-      path: '/project',
-      icon: 'el-icon-s-cooperation',
-      roles: ['管理员', '普通用户']
-    },
-    {
-      title: '家政预订单',
-      path: '/preOrder',
-      icon: 'el-icon-s-order',
-      roles: ['管理员', '普通用户']
-    },
-    {
-      title: '服务进度管理',
-      path: '/tempo',
-      icon: 'el-icon-s-flag',
-      roles: ['管理员', '普通用户']
-    },
-    {
-      title: '服务评价',
-      path: '/comment',
-      icon: 'el-icon-s-comment',
-      roles: ['管理员']
-    },
+
     {
       title: '用户管理',
       path: '/user',
       icon: 'el-icon-user',
-      roles: ['管理员']
+      roles: ['管理员','普通用户']
     },
     {
       title: '系统管理',
