@@ -1,7 +1,18 @@
-/* 侧边栏样式 - 高端科技暗黑风格 */
+/* 侧边栏样式 - 深粉 #A55066 背景 */
+
+/* 定义 深粉 #A55066 菜单颜色变量 */
+$menu-bg-dark-pink: #A55066; /* 主背景 - 深粉 #A55066 */
+$menu-text-dark-pink: #FFFFFF; /* 文字/图标 - 白色 */
+$menu-icon-dark-pink: #FFFFFF;
+$menu-hover-bg-dark-pink: rgba(255, 255, 255, 0.08); /* 悬停背景 - 半透明白 */
+$menu-active-bg-dark-pink: #F5F5DC; /* 激活背景 - 米黄色 #F5F5DC */
+$menu-active-border-dark-pink: #FFFFFF; /* 激活指示条 - 白色 */
+$submenu-bg-dark-pink: darken($menu-bg-dark-pink, 3%); /* 子菜单背景稍深 */
+$logo-border-dark-pink: rgba(255, 255, 255, 0.15);
+
 .sidebar-container {
-  transition: width 0.28s;
-  width: 210px !important;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 恢复默认过渡时间 */
+  width: 210px !important; /* 恢复默认宽度 */
   height: 100%;
   position: fixed;
   top: 0;
@@ -9,15 +20,16 @@
   left: 0;
   z-index: 1001;
   overflow: hidden;
-  background-color: var(--menu-background);
-  box-shadow: var(--dark-box-shadow);
+  background-color: $menu-bg-dark-pink; /* 应用深粉背景 */
+  border-right: none; /* 移除右边框 */
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15); /* 调整阴影 */
 
   &::-webkit-scrollbar {
     display: none;
   }
 
   .el-scrollbar {
-    height: 100%;
+    height: 100%; /* 恢复高度 */
   }
 
   .scrollbar-wrapper {
@@ -32,148 +44,153 @@
     border: none;
     height: 100%;
     width: 100% !important;
-    background-color: var(--menu-background) !important;
+    background-color: transparent !important; /* 背景由容器控制 */
+    padding-top: 0; /* 移除顶部内边距 */
   }
 
   .el-menu-item, .el-submenu__title {
-    height: 56px;
+    height: 56px; /* 恢复默认高度 */
     line-height: 56px;
-    background-color: var(--menu-background) !important;
-    border-left: 3px solid transparent;
-    margin: 4px 0;
-    border-radius: 0 4px 4px 0;
-    transition: all 0.3s ease;
+    background-color: transparent !important; 
+    border-left: 3px solid transparent; /* 恢复默认边框宽度 */
+    margin: 6px 10px; /* 恢复默认边距 */
+    border-radius: 6px; /* 调整圆角 */
+    transition: all 0.3s ease; /* 恢复默认过渡 */
+    color: $menu-text-dark-pink; /* 白色文字 */
+    font-weight: 500;
+    padding: 0 20px !important; 
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2); 
     
     &:hover {
-      background-color: var(--menu-hover) !important;
-      color: var(--accent-light) !important;
+      background-color: $menu-hover-bg-dark-pink !important; 
+      color: $menu-text-dark-pink !important; 
+      transform: none; /* 移除位移 */
+      border-left-color: $menu-active-border-dark-pink; 
       
       i {
-        color: var(--accent-light);
+        color: $menu-icon-dark-pink;
+        transform: scale(1.05); 
       }
     }
     
     i {
-      color: var(--menu-text);
+      color: $menu-icon-dark-pink; /* 白色图标 */
       font-size: 18px;
-      margin-right: 12px;
+      margin-right: 12px; /* 恢复默认间距 */
       transition: all 0.3s;
+      width: auto; 
+      vertical-align: middle;
     }
   }
 
   .el-menu-item.is-active {
-    color: var(--menu-active-text) !important;
-    background-color: var(--menu-active-bg) !important;
-    border-left: 3px solid var(--accent-color);
-    box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.1);
+    color: #333333 !important; /* 激活文字 - 深灰色 */
+    background-color: $menu-active-bg-dark-pink !important; 
+    border-left-color: $menu-active-border-dark-pink; 
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* 调整阴影 */
     
     i {
-      color: var(--menu-active-text);
+      color: #333333 !important; /* 激活图标 - 深灰色 */
+      transform: scale(1.1); 
     }
     
-    &:hover {
-      i {
-        color: var(--menu-active-text);
-      }
-    }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 0;
-      height: 100%;
-      width: 3px;
-      background: linear-gradient(to bottom, var(--accent-color), transparent);
+    &::after { /* 移除之前版本的小圆点 */
+      display: none; 
     }
   }
 
   .el-submenu__title {
     &:hover {
-      background-color: var(--menu-hover) !important;
+      background-color: $menu-hover-bg-dark-pink !important;
     }
   }
 
+  /* 子菜单样式 */
   .el-submenu .el-menu-item {
-    padding-left: 54px !important;
-    min-width: 200px !important;
-    background-color: var(--menu-dark) !important;
+    padding-left: 54px !important; /* 恢复默认缩进 */
+    min-width: auto !important; /* 移除最小宽度限制 */
+    border-radius: 0; /* 子菜单无圆角 */
+    margin: 0; /* 子菜单无外边距 */
+    border-left: none;
+    color: darken($menu-text-dark-pink, 10%); /* 子菜单文字稍暗 */
+    text-shadow: none;
+    height: 50px; /* 子菜单高度调整 */
+    line-height: 50px;
     
     &:hover {
-      background-color: var(--menu-hover) !important;
+      background-color: $menu-hover-bg-dark-pink !important;
+      color: $menu-text-dark-pink !important; /* 悬停时恢复纯白 */
     }
     
     &.is-active {
-      background-color: var(--menu-active-bg) !important;
+      // background-color: $menu-active-bg-dark-pink !important;
+      color: black !important; /* 激活子菜单文字 - 黑色 */
+      font-weight: normal; /* 不加粗 */
+      
+      &::before { /* 移除之前的激活指示符 */
+        display: none;
+      }
     }
   }
 
-  .el-submenu.is-active .el-submenu__title {
-    color: var(--menu-active-text) !important;
+  .el-submenu.is-active > .el-submenu__title {
+    background-color: transparent !important; /* 展开的父菜单背景透明 */
+    color: black !important; /* 激活父菜单文字 - 黑色 */
     
     i {
-      color: var(--menu-active-text);
+      color: black !important; /* 激活父菜单图标 - 黑色 */
     }
+
   }
 
-  .el-menu-item [class^="el-icon-"] {
-    margin-right: 12px;
-    font-size: 18px;
-    vertical-align: middle;
-  }
-
+  /* Logo区域 */
   .logo-container {
-    height: 60px;
-    padding: 0;
+    height: 70px;
+    padding: 0 15px; /* 调整内边距 */
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid var(--dark-border);
-    background-color: var(--menu-dark);
+    justify-content: center; /* Logo和标题居中 */
+    border-bottom: 1px solid $logo-border-dark-pink; 
+    background-color: transparent; 
     position: relative;
     overflow: hidden;
     
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-    }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-      opacity: 0.5;
+    &::before, &::after { /* 移除之前的装饰线 */
+      display: none;
     }
     
     .logo {
-      height: 36px;
-      width: auto;
+      height: 36px; 
+      width: 36px;
       vertical-align: middle;
-      margin-right: 12px;
-      filter: drop-shadow(0 0 5px var(--accent-glow));
+      margin-right: 10px;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); 
+      transition: transform 0.3s;
+      object-fit: contain;
+      
+      &:hover {
+        transform: rotate(15deg); 
+      }
     }
     
     .title {
-      color: white;
-      font-size: 18px;
+      color: $menu-text-dark-pink; /* 白色标题 */
+      font-size: 18px; 
       font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      letter-spacing: 1px;
-      text-shadow: 0 0 10px var(--accent-glow);
-      background: linear-gradient(to right, #fff, var(--accent-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3); 
+      background: none; 
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: unset;
+      transition: color 0.3s;
+      
+      &:hover {
+        color: $menu-text-dark-pink; 
+        letter-spacing: 0.5px;
+      }
     }
   }
 }
@@ -181,11 +198,11 @@
 /* 折叠样式 */
 .hideSidebar {
   .sidebar-container {
-    width: 54px !important;
+    width: 54px !important; /* 恢复默认折叠宽度 */
   }
 
   .main-container {
-    margin-left: 54px;
+    margin-left: 54px; /* 恢复默认边距 */
   }
 
   .el-submenu {
@@ -233,14 +250,51 @@
 
   .sidebar-container {
     transition: transform .28s;
-    width: 210px !important;
+    width: 210px !important; /* 恢复默认宽度 */
   }
 
   &.hideSidebar {
     .sidebar-container {
       pointer-events: none;
       transition-duration: 0.3s;
-      transform: translate3d(-210px, 0, 0);
+      transform: translate3d(-210px, 0, 0); /* 恢复默认位移 */
+    }
+  }
+}
+
+.withoutAnimation {
+  .main-container,
+  .sidebar-container {
+    transition: none;
+  }
+}
+
+/* 悬浮菜单样式 (折叠时) */
+.el-menu--vertical {
+  .el-menu--popup {
+    background: $menu-bg-dark-pink !important; /* 应用深粉背景 */
+    border: 1px solid $logo-border-dark-pink;
+    border-radius: 4px; /* 调整圆角 */
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1); /* 默认阴影 */
+    padding: 5px 0; /* 调整内边距 */
+    
+    .el-menu-item, .el-submenu__title {
+      color: $menu-text-dark-pink;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+      height: 40px; /* 调整高度 */
+      line-height: 40px;
+      margin: 0 5px; /* 调整边距 */
+      border-radius: 4px;
+      border-left: none;
+      padding: 0 15px !important; /* 调整内边距 */
+      
+      &:hover {
+        background-color: $menu-hover-bg-dark-pink !important;
+      }
+    }
+    .el-menu-item.is-active {
+       background-color: $menu-active-bg-dark-pink !important;
+       color: $menu-text-dark-pink !important;
     }
   }
 } 

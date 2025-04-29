@@ -2,16 +2,16 @@
 
 /* 基础变量定义 */
 :root {
-  /* 主题配色 - 深色科技风 */
-  --primary-color: #4F46E5;
-  --primary-light: #818CF8;
-  --primary-dark: #3730A3;
-  --primary-gradient: linear-gradient(135deg, #4F46E5 0%, #7A70FE 100%);
+  /* 主题配色 - 高端粉色风格 */
+  --primary-color: #FF5B87;
+  --primary-light: #FF7DA1;
+  --primary-dark: #E43F6F;
+  --primary-gradient: linear-gradient(135deg, #FF5B87 0%, #FF8CAF 100%);
   
-  --accent-color: #06B6D4;
-  --accent-light: #22D3EE;
-  --accent-dark: #0891B2;
-  --accent-gradient: linear-gradient(135deg, #06B6D4 0%, #0EA5E9 100%);
+  --accent-color: #FF6D98;
+  --accent-light: #FF8CAF;
+  --accent-dark: #E43F6F;
+  --accent-gradient: linear-gradient(135deg, #FF6D98 0%, #FF5B87 100%);
   
   --success-color: #10B981;
   --success-light: #34D399;
@@ -25,44 +25,44 @@
   --danger-light: #F87171;
   --danger-dark: #DC2626;
   
-  --info-color: #6366F1;
-  --info-light: #818CF8;
-  --info-dark: #4F46E5;
+  --info-color: #FF6D98;
+  --info-light: #FF8CAF;
+  --info-dark: #E43F6F;
   
   /* 文本颜色 */
-  --text-primary: #F3F4F6;
-  --text-secondary: #D1D5DB;
-  --text-tertiary: #9CA3AF;
-  --text-placeholder: #6B7280;
-  --text-dark: #1F2937;
+  --text-primary: #333333;
+  --text-secondary: #555555;
+  --text-tertiary: #777777;
+  --text-placeholder: #999999;
+  --text-dark: #222222;
   
   /* 边框颜色 */
-  --border-color: #374151;
-  --border-light: #4B5563;
-  --border-lighter: #6B7280;
-  --border-extra-light: #9CA3AF;
+  --border-color: #FFB0C4;
+  --border-light: #FF8CAF;
+  --border-lighter: #FF6D98;
+  --border-extra-light: #FF5B87;
 
   /* 背景颜色 */
-  --background-color: #111827;
-  --background-light: #1F2937;
-  --background-lighter: #374151;
-  --background-card: #1E293B;
+  --background-color: #FFEFF4;
+  --background-light: #FFE0E9;
+  --background-lighter: #FFD0DE;
+  --background-card: #FFFFFF;
   
   /* 菜单颜色 */
-  --menu-background: #0F172A;
-  --menu-dark: #020617;
-  --menu-text: #94A3B8;
-  --menu-active-text: #38BDF8;
-  --menu-hover: #1E293B;
-  --menu-active-bg: rgba(56, 189, 248, 0.1);
-  --header-dark: #0F172A;
-  --accent-glow: rgba(56, 189, 248, 0.5);
-  --dark-border: #1E293B;
+  --menu-background: #FFDBE5;
+  --menu-dark: #FFC6D6;
+  --menu-text: #B0405A;
+  --menu-active-text: #FF3D6F;
+  --menu-hover: #FFCEE0;
+  --menu-active-bg: rgba(255, 61, 111, 0.1);
+  --header-dark: #FFE0E9;
+  --accent-glow: rgba(255, 61, 111, 0.25);
+  --dark-border: #FFC6D6;
 
   /* 阴影 */
-  --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --dark-box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-  --glow-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+  --box-shadow: 0 4px 12px rgba(255, 91, 135, 0.08), 0 2px 4px rgba(255, 91, 135, 0.04);
+  --dark-box-shadow: 0 10px 25px rgba(255, 91, 135, 0.1), 0 5px 10px rgba(255, 91, 135, 0.06);
+  --glow-shadow: 0 0 20px rgba(255, 91, 135, 0.2);
   
   /* 过渡效果 */
   --transition-time: 0.3s;
@@ -103,31 +103,91 @@ body {
 .el-button--primary {
   background: var(--primary-gradient) !important;
   border: none !important;
-  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(255, 91, 135, 0.25) !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+  
+  &:hover, &:focus {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(255, 91, 135, 0.35) !important;
+  }
+  
+  &:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 2px 8px rgba(255, 91, 135, 0.2) !important;
+  }
 }
 
 .el-button--success {
   background: linear-gradient(135deg, var(--success-color) 0%, var(--success-light) 100%) !important;
   border: none !important;
-  box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+  
+  &:hover, &:focus {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3) !important;
+  }
+  
+  &:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15) !important;
+  }
 }
 
 .el-button--danger {
   background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-light) 100%) !important;
   border: none !important;
-  box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+  
+  &:hover, &:focus {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3) !important;
+  }
+  
+  &:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15) !important;
+  }
 }
 
 .el-button--warning {
   background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-light) 100%) !important;
   border: none !important;
-  box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2) !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+  
+  &:hover, &:focus {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3) !important;
+  }
+  
+  &:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15) !important;
+  }
 }
 
 .el-button--info {
   background: linear-gradient(135deg, var(--info-color) 0%, var(--info-light) 100%) !important;
   border: none !important;
-  box-shadow: 0 2px 5px rgba(99, 102, 241, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(255, 109, 152, 0.2) !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+  
+  &:hover, &:focus {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(255, 109, 152, 0.3) !important;
+  }
+  
+  &:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 2px 8px rgba(255, 109, 152, 0.15) !important;
+  }
 }
 
 /* 动画 */
@@ -242,50 +302,226 @@ body {
   padding: 20px;
 }
 
-/* 下拉菜单样式覆盖，解决颜色分层问题 */
+/* 下拉菜单样式优化 */
 .el-dropdown-menu {
-  background-color: #1a2236 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px !important;
-  margin-top: 5px !important;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3) !important;
-  padding: 0 !important;
+  background-color: var(--background-card) !important; /* 白色背景 */
+  border: 1px solid var(--border-color) !important; /* 非常浅的粉色边框 */
+  border-radius: 8px !important; /* 调整圆角 */
+  margin-top: 8px !important; /* 调整与触发元素的距离 */
+  box-shadow: var(--dark-box-shadow) !important; /* 使用稍深阴影 */
+  padding: 6px 0 !important; /* 调整内边距 */
   overflow: hidden !important;
 }
 
 .el-dropdown-menu__item {
-  background-color: #1a2236 !important;
-  color: #fff !important;
-  padding: 12px 16px !important;
-  line-height: 1.5 !important;
+  background-color: transparent !important;
+  color: var(--text-secondary) !important; /* 中灰色文字 */
+  padding: 10px 16px !important; /* 调整内边距 */
+  line-height: 1.6 !important; /* 调整行高 */
   font-size: 14px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+  border: none !important; /* 移除之前的边框 */
+  transition: all var(--transition-time) ease !important;
+  margin: 0 6px; /* 左右增加间距 */
+  border-radius: 6px; /* 为菜单项增加圆角 */
   
+  /* 移除之前的下边框 */
+  /*
   &:last-child {
     border-bottom: none !important;
   }
+  */
   
   &:hover, &:focus {
-    background-color: rgba(64, 158, 255, 0.1) !important;
-    color: #409EFF !important;
+    background-color: var(--background-hover) !important; /* 悬停时极浅粉背景 */
+    color: var(--primary-color) !important; /* 悬停时主粉色文字 */
+    padding-left: 16px !important; /* 保持内边距不变 */
   }
   
   i {
-    margin-right: 10px;
+    margin-right: 10px; /* 调整图标间距 */
     font-size: 16px;
-    color: #409EFF;
+    color: var(--text-tertiary); /* 浅灰色图标 */
+    opacity: 1;
+    transition: all var(--transition-time) ease;
+    vertical-align: middle; /* 图标垂直居中 */
+  }
+  
+  &:hover i {
+    color: var(--primary-color); /* 悬停时主粉色图标 */
+    opacity: 1;
+    transform: scale(1.1); /* 轻微放大 */
   }
 }
 
+/* 分割线 */
 .el-dropdown-menu__item--divided {
-  margin-top: 0 !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  margin-top: 6px !important; /* 调整分割线上边距 */
+  padding-top: 6px !important; /* 调整分割线下内边距 */
+  border-top: 1px solid var(--border-light) !important; /* 使用更浅的粉色分割线 */
+  margin-left: 0 !important; /* 分割线延伸至边缘 */
+  margin-right: 0 !important;
+  border-radius: 0 !important; /* 分割线项无圆角 */
 }
 
 .el-dropdown-menu__item--divided:before {
   display: none !important;
 }
 
+/* 禁用状态 */
 .el-dropdown-menu__item.is-disabled {
-  color: rgba(255, 255, 255, 0.4) !important;
-} 
+  color: var(--text-placeholder) !important; /* 使用占位符颜色 */
+  cursor: not-allowed;
+  &:hover {
+    background-color: transparent !important;
+    color: var(--text-placeholder) !important;
+    i {
+       color: var(--text-placeholder) !important;
+    }
+  }
+}
+
+/* 全局滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px; /* 滚动条宽度 */
+  height: 8px; /* 水平滚动条高度 */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-lighter); /* 滚动条轨道背景 - 浅粉色 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color); /* 滚动条滑块颜色 - 浅粉红 */
+  border-radius: 4px;
+  transition: background var(--transition-time) ease;
+  border: 2px solid var(--background-lighter); /* 添加边框使其看起来更细 */
+
+  &:hover {
+    background: var(--primary-color); /* 悬停时主粉色 */
+    border-color: var(--background-hover);
+  }
+}
+
+/* Firefox 滚动条 (可选，但建议添加以兼容) */
+* {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: var(--accent-color) var(--background-lighter); /* thumb and track color */
+}
+
+/* Element Plus Tooltip Override for Table Overflow */
+.el-tooltip__popper.is-dark {
+  background: #FFEFF4 !important; // 浅粉色背景
+  color: #333333 !important; // 黑色文字
+  border: 1px solid #FFB0C4 !important; // 粉色边框
+  box-shadow: var(--box-shadow) !important; // 使用主题阴影
+  border-radius: 6px !important;
+  padding: 8px 12px !important; // 调整内边距
+}
+
+// 修改 Tooltip 箭头的颜色 (需要针对 ::before 或 ::after 伪元素)
+.el-tooltip__popper.is-dark .el-popper__arrow::before {
+  background: #FFEFF4 !important; // 箭头背景色与 Tooltip 背景一致
+  border-color: #FFB0C4 #FFB0C4 transparent transparent !important; // 调整箭头边框颜色，具体方向可能需要根据实际情况微调
+  border-width: 1px !important; // 确保边框宽度一致
+}
+
+// 针对不同方向的箭头可能需要不同的 border-color 设置
+// 例如，如果箭头在下方弹出:
+.el-tooltip__popper[data-popper-placement^='bottom'].is-dark .el-popper__arrow::before {
+    border-color: transparent transparent #FFB0C4 #FFB0C4 !important;
+}
+// 如果箭头在左侧弹出:
+.el-tooltip__popper[data-popper-placement^='left'].is-dark .el-popper__arrow::before {
+    border-color: #FFB0C4 transparent transparent #FFB0C4 !important;
+}
+// 如果箭头在右侧弹出:
+.el-tooltip__popper[data-popper-placement^='right'].is-dark .el-popper__arrow::before {
+    border-color: transparent #FFB0C4 #FFB0C4 transparent !important;
+}
+
+/* Element UI Table Styles */
+.el-table {
+  // Fix text colors
+  td {
+    color: var(--text-primary, #333333) !important; // 表格单元格文字设为黑色
+  }
+
+  .el-tag {
+    color: #333333 !important; // Tag 文字设为黑色
+    // 使用浅色背景和边框以确保黑色文字可读性
+    background-color: #f0f2f5 !important; 
+    border-color: #dcdfe6 !important; 
+
+    // 如果有特定类型的 Tag (success, info, warning, danger)，可以单独设置浅色背景
+    &.el-tag--success {
+       background-color: #f0f9eb !important;
+       border-color: #e1f3d8 !important;
+    }
+     &.el-tag--info { // 假设"普通用户"是 info 类型
+       background-color: #f4f4f5 !important;
+       border-color: #e9e9eb !important;
+    }
+     &.el-tag--danger { // 示例
+       background-color: #fef0f0 !important;
+       border-color: #fde2e2 !important;
+     }
+     &.el-tag--warning { // 示例
+        background-color: #fdf6ec !important;
+        border-color: #faecd8 !important;
+     }
+  }
+
+  // Add hover styles
+  .el-table__body tr:hover > td {
+    background-color: #FAE0E6 !important; // 设置悬浮背景为柔和粉色
+    color: #333333 !important; // 设置悬浮字体为黑色
+
+    // 如果需要，也可以改变链接等元素的颜色
+    a {
+      color: #0056b3 !important; // 示例：悬浮时链接颜色
+    }
+  }
+  
+  // Ensure striped table hover looks good too
+  &.el-table--striped .el-table__body tr.el-table__row--striped:hover > td {
+     background-color: #FAE0E6 !important; // 覆盖斑马纹悬浮
+  }
+}
+
+/* 基本表头背景色 - 仅设置背景色和文字颜色 */
+.el-table__header-wrapper th {
+  background-color: var(--menu-background, #FFDBE5) !important; // 设置表头背景色
+  color: var(--menu-text, #B0405A) !important; // 设置表头文字颜色
+}
+
+/* 专门为 gutter 元素设置背景色 */
+.el-table__header-wrapper th.gutter,
+.el-table__header-wrapper th.is-hidden {
+  background-color: var(--menu-background, #FFDBE5) !important; // 确保 gutter 背景色与其他表头一致
+}
+
+/* 专门为"操作"列设置样式 - 修复缺口和变形 */
+.el-table__header-wrapper th.el-table_1_column_7 {
+  background-color: var(--menu-background, #FFDBE5) !important;
+}
+
+/* 专门为操作列的内容设置样式 */
+.el-table td.el-table__cell:last-child .cell {
+  display: inline-flex !important; /* 使用 inline-flex 而不是 flex */
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+/* 修复表头与表体操作列的对齐 */
+.el-table th.el-table__cell:last-child .cell {
+  text-align: center !important;
+}
+
+/* 最后一列特殊处理 - 尝试修复背景缺口 */
+.el-table .el-table__header tr th:last-child,
+.el-table .el-table__header tr th.gutter {
+  background-color: var(--menu-background, #FFDBE5) !important;
+}
+
+/* Scrollbar Styles */ 

@@ -9,13 +9,13 @@ const systemService = {
    */
   systemInfo: {
     // 系统名称
-    name: '脚手架管理系统',
+    name: 'Demo管理系统',
     // 系统版本
     version: '1.0.0',
     // 系统logo (如果有)
     logo: null,
     // 系统主题色
-    primaryColor: '#409EFF',
+    primaryColor: '#FF6B8B',
     // 后台API基础地址，如果需要切换不同后台，可以修改此处
     apiBaseUrl: 'http://localhost:8090',
     // 默认头像路径

@@ -27,21 +27,18 @@ public class StatisticService {
 
     public StatsResp getStats() {
         StatsResp statsResp = new StatsResp();
-//        List<ServiceType> serviceTypes = serviceTypeService.list();
-
-//        Map<String, Map<String, Object>> typeCountMap = preOrderMapper.getServiceTypeCount();
-//        List<StatsResp.UsageStat> usageStats = this.action(serviceTypes, s -> typeCountMap.containsKey(s.getName()), s -> new StatsResp.UsageStat(s.getName(), ((Long)typeCountMap.get(s.getName()).get("count")).intValue()), s -> new StatsResp.UsageStat(s.getName(), 0));
-//        statsResp.setUsageStats(usageStats);
-
-//        List<BaseStateCounter> counters = preOrderMapper.statsSuccessRate();
-//        Map<String, List<BaseStateCounter>> map = counters.stream().collect(Collectors.groupingBy(BaseStateCounter::getName, Collectors.toList()));
-//        List<StatsResp.SuccessRate> successRates = this.action(serviceTypes, s -> map.containsKey(s.getName()),
-//                s -> {
-//                    List<BaseStateCounter> list = map.getOrDefault(s.getName(), Collections.emptyList());
-//                    return new StatsResp.SuccessRate(s.getName(), list.stream().filter(l -> l.getState() == 3).map(BaseStateCounter::getCount).findFirst().orElse(0), list.stream().filter(l -> l.getState() != 3).mapToInt(BaseStateCounter::getCount).sum());
-//                }, s -> new StatsResp.SuccessRate(s.getName(), 0, 0));
-//        statsResp.setSuccessRates(successRates);
-
+        statsResp.setUsageStats(List.of(
+                new StatsResp.UsageStat("Test001", 100),
+                new StatsResp.UsageStat("Test002", 300),
+                new StatsResp.UsageStat("Test003", 800),
+                new StatsResp.UsageStat("Test004", 400)
+        ));
+        statsResp.setSuccessRates(List.of(
+                new StatsResp.SuccessRate("Test001", 20, 80),
+                new StatsResp.SuccessRate("Test002", 30, 270),
+                new StatsResp.SuccessRate("Test003", 80, 720),
+                new StatsResp.SuccessRate("Test004", 50, 350)
+        ));
         List<SysAccess> list = sysAccessMapper.list().stream().filter(ObjectUtil::isNotEmpty).collect(Collectors.toList());
         List<String> result = new ArrayList<>(30);
         LocalDate today = LocalDate.now();
@@ -57,7 +54,6 @@ public class StatisticService {
         statsResp.setAccessTrend(accessTrend);
         return statsResp;
     }
-
 
 
     public TotalCountResp totalCountResp() {

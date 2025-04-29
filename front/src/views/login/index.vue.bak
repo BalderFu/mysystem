@@ -1,8 +1,5 @@
 <template>
   <div class="login-container">
-    <!-- 添加动态背景组件 -->
-    <dynamic-login-background />
-    
     <div class="login-box">
       <div class="login-header">
         <img src="@/assets/logo.png" alt="Logo" class="logo">
@@ -222,12 +219,9 @@ import Constants from "@/utils/constants";
 import Cookies from 'js-cookie';
 import { login, loginWithPhone, registry, sendValidateCode, userInfo } from "@/utils/inputs";
 import systemService from '@/services/systemService';
-import DynamicLoginBackground from '@/components/DynamicLoginBackground.vue';
 
 export default {
   name: 'Login',
-  // 注册新组件
-  components: { DynamicLoginBackground },
   data() {
     // 密码验证规则
     const validatePassword = (rule, value, callback) => {

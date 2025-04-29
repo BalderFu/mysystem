@@ -1,4 +1,4 @@
-package com.myhousekeepingservice;
+package com.myhousekeepingservice.utils;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

@@ -215,7 +215,7 @@ export default {
           top: 'center',
           data: algorithmData.map(item => item.name),
           textStyle: {
-            color: 'var(--text-primary, #606266)'
+            color: '#A55066'
           }
         },
         series: [
@@ -266,7 +266,7 @@ export default {
         legend: {
           data: [this.successLabel, this.failLabel],
           textStyle: {
-            color: '#fff',
+            color: '#A55066',
             fontSize: 12,
             fontWeight: 'bold'
           }
@@ -282,7 +282,7 @@ export default {
           max: 100,
           axisLabel: {
             formatter: '{value}%',
-            color: '#fff',
+            color: '#A55066',
             fontSize: 12,
             fontWeight: 'bold'
           },
@@ -304,7 +304,7 @@ export default {
           type: 'category',
           data: successRateData.map(item => item.name),
           axisLabel: {
-            color: '#fff',
+            color: '#A55066',
             fontSize: 12,
             fontWeight: 'bold',
             margin: 16
@@ -398,7 +398,7 @@ export default {
           boundaryGap: false,
           data: dates,
           axisLabel: {
-            color: '#fff',
+            color: '#A55066',
             fontSize: 12,
             margin: 12,
             fontWeight: 'bold',
@@ -422,7 +422,7 @@ export default {
           type: 'value',
           axisLabel: {
             formatter: '{value}',
-            color: '#fff',
+            color: '#A55066',
             fontSize: 12,
             fontWeight: 'bold',
             margin: 16
@@ -584,10 +584,10 @@ export default {
       const options = {
         backgroundColor: 'transparent',
         tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        legend: { data: [this.successLabel, this.failLabel], textStyle: { color: '#fff', fontSize: 12, fontWeight: 'bold' } },
+        legend: { data: [this.successLabel, this.failLabel], textStyle: { color: '#A55066', fontSize: 12, fontWeight: 'bold' } },
         grid: { left: '5%', right: '5%', bottom: '5%', containLabel: true },
-        xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%', color: '#fff', fontSize: 12, fontWeight: 'bold' }, axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.5)', width: 2 } }, splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.2)', type: 'dashed', width: 1 } } },
-        yAxis: { type: 'category', data: data.map(item => item.name), axisLabel: { color: '#fff', fontSize: 12, fontWeight: 'bold', margin: 16 }, axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.5)', width: 2 } } },
+        xAxis: { type: 'value', max: 100, axisLabel: { formatter: '{value}%', color: '#A55066', fontSize: 12, fontWeight: 'bold' }, axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.5)', width: 2 } }, splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.2)', type: 'dashed', width: 1 } } },
+        yAxis: { type: 'category', data: data.map(item => item.name), axisLabel: { color: '#A55066', fontSize: 12, fontWeight: 'bold', margin: 16 }, axisLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.5)', width: 2 } } },
         series: [
           { name: this.successLabel, type: 'bar', stack: 'total', label: { show: true, formatter: '{c}%', color: '#fff', fontSize: 14, fontWeight: 'bold', textShadowColor: 'rgba(0, 0, 0, 0.3)', textShadowBlur: 3, textShadowOffsetX: 1, textShadowOffsetY: 1 }, emphasis: { focus: 'series' }, data: data.map(item => item.success), itemStyle: { color: '#67C23A' } },
           { name: this.failLabel, type: 'bar', stack: 'total', label: { show: true, formatter: '{c}%', color: '#fff', fontSize: 14, fontWeight: 'bold', textShadowColor: 'rgba(0, 0, 0, 0.3)', textShadowBlur: 3, textShadowOffsetX: 1, textShadowOffsetY: 1 }, emphasis: { focus: 'series' }, data: data.map(item => item.fail), itemStyle: { color: '#F56C6C' } }
@@ -638,20 +638,36 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .dashboard-container {
   padding: 20px;
-}
-
-.chart-container {
-  width: 100%;
-  height: 350px;
+  background-color: var(--background-primary, #f4f6f8); // 使用CSS变量适应主题
+  min-height: calc(100vh - 50px); // 假设顶部导航栏高度为50px
 }
 
 .box-card {
   margin-bottom: 20px;
-  background-color: var(--background-card);
-  border: 1px solid var(--border-color);
+  border: none;
+  box-shadow: var(--el-box-shadow-light); // 使用Element UI变量
+  background-color: var(--background-card, #fff); // 卡片背景
+  border-radius: 8px;
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+  .clearfix span {
+    font-weight: bold;
+    color: var(--text-primary, #303133); // 标题颜色
+  }
+}
+
+.overview-card .el-card__header {
+  border-bottom: 1px solid var(--el-border-color-lighter); // 分割线颜色
 }
 
 .stat-card {
@@ -659,41 +675,59 @@ export default {
   align-items: center;
   padding: 20px;
   border-radius: 8px;
-  color: white;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-}
+  color: #fff; // 默认文字白色
+  margin-bottom: 20px; // 为移动端堆叠添加间距
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-.stat-icon {
-  font-size: 56px;
-  margin-right: 20px;
-}
-
-.stat-info {
-  flex: 1;
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.stat-title {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-/* 响应式调整 */
-@media (max-width: 992px) {
-  .chart-container {
-    height: 300px;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   }
 }
 
+.stat-icon {
+  font-size: 48px; // 增大图标尺寸
+  margin-right: 20px;
+  flex-shrink: 0;
+  
+  i {
+    color: #FFFFFF; /* 设置图标颜色为白色 */
+    vertical-align: middle;
+  }
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-value {
+  font-size: 24px; // 增大数值尺寸
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.stat-title {
+  font-size: 14px; // 调整标题字体大小
+  opacity: 0.9;
+}
+
+.chart-container {
+  height: 350px; // 固定图表高度
+  width: 100%;
+}
+
+/* 响应式调整 */
 @media (max-width: 768px) {
-  .chart-container {
-    height: 250px;
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  .stat-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
   }
 }
 </style>
