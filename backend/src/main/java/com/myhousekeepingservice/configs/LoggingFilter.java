@@ -47,20 +47,22 @@ public class LoggingFilter implements Filter {
         try {
             filterChain.doFilter(wrappedRequest, wrappedResponse);
         } finally {
-            long duration = System.currentTimeMillis() - start;
+            if (!request.getMethod().equals("OPTIONS")) {
+                long duration = System.currentTimeMillis() - start;
 
-            String requestBody = getRequestBody(wrappedRequest);
-            String responseBody = getResponseBody(wrappedResponse);
-            wrappedResponse.copyBodyToResponse();
-            Long userId = null;
-            try {
-                userId = StpUtil.getLoginIdAsLong();
-            } catch (Exception e) {
-            }
-            try {
-                saveLog(userId, request.getRequestURI(), StrUtil.isBlank(requestBody) ? request.getQueryString() : requestBody, new String(responseBody.getBytes(StandardCharsets.UTF_8)), duration);
-            } catch (Exception e) {
-                log.error("统计出错, ", e);
+                String requestBody = getRequestBody(wrappedRequest);
+                String responseBody = getResponseBody(wrappedResponse);
+                wrappedResponse.copyBodyToResponse();
+                Long userId = null;
+                try {
+                    userId = StpUtil.getLoginIdAsLong();
+                } catch (Exception e) {
+                }
+                try {
+                    saveLog(userId, request.getRequestURI(), StrUtil.isBlank(requestBody) ? request.getQueryString() : requestBody, new String(responseBody.getBytes(StandardCharsets.UTF_8)), duration);
+                } catch (Exception e) {
+                    log.error("统计出错, ", e);
+                }
             }
         }
     }
@@ -81,6 +83,9 @@ public class LoggingFilter implements Filter {
 
     private String getResponseBody(ContentCachingResponseWrapper response) {
         byte[] buf = response.getContentAsByteArray();
+        if (response.getContentType().toLowerCase().startsWith(ContentType.MULTIPART.getValue())) {
+            return "访问系统图片";
+        }
         if (buf.length > 0) {
             return new String(buf, StandardCharsets.UTF_8);
         }

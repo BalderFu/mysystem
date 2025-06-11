@@ -23,9 +23,14 @@ public class ${table.controllerName} {
 
 	@GetMapping("/page")
     public Result<Page<${entity}>> page(@RequestParam("pageNum") Integer pageNum, 
-    									@RequestParam("pageSize") Integer pageSize) {
+    									 @RequestParam("pageSize") Integer pageSize) {
         return Result.success(${table.entityPath}Service.page(new Page<>(pageNum, pageSize)));
     }
+
+	@GetMapping("{id}")
+	public Result<${entity}> detail(@PathVariable("id") Long id) {
+		return Result.success(${table.entityPath}Service.getById(id));
+	}
 
 	@PostMapping
 	public Result<Void> save(@Validated @RequestBody ${entity} entity) {

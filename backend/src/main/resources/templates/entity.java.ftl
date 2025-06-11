@@ -33,16 +33,14 @@ private static final long serialVersionUID = 1L;
 
     <#else>
         <#if field.comment??>
-            @ApiModelProperty("${field.comment}")
+        @ApiModelProperty("${field.comment}")
         </#if>
-
         <#if field.propertyType == "LocalDateTime">
-            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
         </#if>
         <#if field.propertyType == "Date">
-            @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+        @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
         </#if>
-
         @TableField("`${field.name}`")
         private ${field.propertyType} ${field.propertyName};
 

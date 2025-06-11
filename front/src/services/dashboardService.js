@@ -75,7 +75,6 @@ const dashboardService = {
             statisticsCards[3].value = Number(response.data.count4);
           }
           
-          // 调试日志
           console.log('API返回的数据:', response.data);
           console.log('处理后的卡片数据:', JSON.stringify(statisticsCards, null, 2));
         }
