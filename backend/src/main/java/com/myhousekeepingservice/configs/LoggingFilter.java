@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -49,20 +47,22 @@ public class LoggingFilter implements Filter {
         try {
             filterChain.doFilter(wrappedRequest, wrappedResponse);
         } finally {
-            long duration = System.currentTimeMillis() - start;
+            if (!request.getMethod().equals("OPTIONS")) {
+                long duration = System.currentTimeMillis() - start;
 
-            String requestBody = getRequestBody(wrappedRequest);
-            String responseBody = getResponseBody(wrappedResponse, wrappedRequest);
-            wrappedResponse.copyBodyToResponse();
-            Long userId = null;
-            try {
-                userId = StpUtil.getLoginIdAsLong();
-            } catch (Exception e) {
-            }
-            try {
-                saveLog(userId, request.getRequestURI(), StrUtil.isBlank(requestBody) ? request.getQueryString() : requestBody, new String(responseBody.getBytes(StandardCharsets.UTF_8)), duration);
-            } catch (Exception e) {
-                log.error("统计出错, ", e);
+                String requestBody = getRequestBody(wrappedRequest);
+                String responseBody = getResponseBody(wrappedResponse);
+                wrappedResponse.copyBodyToResponse();
+                Long userId = null;
+                try {
+                    userId = StpUtil.getLoginIdAsLong();
+                } catch (Exception e) {
+                }
+                try {
+                    saveLog(userId, request.getRequestURI(), StrUtil.isBlank(requestBody) ? request.getQueryString() : requestBody, new String(responseBody.getBytes(StandardCharsets.UTF_8)), duration);
+                } catch (Exception e) {
+                    log.error("统计出错, ", e);
+                }
             }
         }
     }
@@ -81,13 +81,13 @@ public class LoggingFilter implements Filter {
         return "";
     }
 
-    private String getResponseBody(ContentCachingResponseWrapper response, ContentCachingRequestWrapper request) {
+    private String getResponseBody(ContentCachingResponseWrapper response) {
         byte[] buf = response.getContentAsByteArray();
-        if (StrUtil.isBlank(response.getContentType()) ||response.getContentType().startsWith(ContentType.JSON.getValue()) && buf.length > 0) {
-            return new String(buf, StandardCharsets.UTF_8);
+        if (response.getContentType().toLowerCase().startsWith(ContentType.MULTIPART.getValue())) {
+            return "访问系统图片";
         }
-        if (response.getContentType().startsWith("image/")) {
-            return "读取图片(大小:" + response.getContentSize() + "):" + request.getRequestURI();
+        if (buf.length > 0) {
+            return new String(buf, StandardCharsets.UTF_8);
         }
         return "";
     }

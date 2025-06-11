@@ -22,25 +22,17 @@ request.interceptors.request.use(
         Promise.reject(error);
     }
 );
-// 响应拦截器
+
 request.interceptors.response.use(
     (response) => {
         if(response.data.code != 200){
             if(response.data.code == 401){
-                // **只在当前路由不是 `/login` 时才跳转**
                 if (router.currentRoute.path !== '/login') {
-                    router.replace('/login'); // **不会触发重复导航**
+                    router.replace('/login');
                 }
-                // 先 reject 这个请求，阻止后续代码执行
-                    // **阻止后续代码执行，但不抛出异常**
                 return new Promise(() => {});
             }
-            // Message({
-            //     message: response.data.message,
-            //     type: "error"
-            // });
-            // return new Promise(() => {});
-        
+
         }
         console.log("response拦截器处理: ",response.data)
         return response.data;

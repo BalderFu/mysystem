@@ -3,29 +3,23 @@ import App from './App.vue'
 import router from './router'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import '@/assets/css/variables.css';  // 引入CSS变量
+import '@/assets/css/variables.css';
 import axios from 'axios';
 
-// 引入全局样式
 import '@/styles/main.scss';
 
-// 配置 axios
 axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
 axios.defaults.baseURL = 'http://localhost:8090';
 Vue.prototype.$axios = axios;
 
-// 创建全局事件总线
 Vue.prototype.$eventBus = new Vue();
 
-// 使用 Element UI
 Vue.use(ElementUI, {
-  size: 'medium' // 设置组件默认尺寸
+  size: 'medium'
 });
 
-// 设置生产环境
 Vue.config.productionTip = false
 
-// 创建 Vue 实例
 new Vue({
   router,
   render: function (h) { return h(App) }
